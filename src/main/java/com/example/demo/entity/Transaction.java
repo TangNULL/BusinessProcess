@@ -4,9 +4,9 @@ public class Transaction {
     private int transId;  //
     private User sender;  //交易发起方
     private User receiver;  //交易接收方
-    private String TranDescription;  //交易内容
+    private String tranDescription;  //交易内容
     private boolean isComplete;  //交易是否完成
-    private String Consultation;  //协商历史
+    private String consultation;  //协商历史
 
     public int getTransId() {
         return transId;
@@ -33,11 +33,11 @@ public class Transaction {
     }
 
     public String getTranDescription() {
-        return TranDescription;
+        return tranDescription;
     }
 
     public void setTranDescription(String tranDescription) {
-        TranDescription = tranDescription;
+        this.tranDescription = tranDescription;
     }
 
     public boolean isComplete() {
@@ -49,10 +49,10 @@ public class Transaction {
     }
 
     public String getConsultation() {
-        return Consultation;
+        return consultation;
     }
 
     public void setConsultation(String consultation) {
-        Consultation = consultation;
+        this.consultation = consultation;
     }
 }
