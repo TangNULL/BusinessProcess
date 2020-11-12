@@ -1,19 +1,19 @@
 package com.example.demo.entity;
 
 public class Transaction {
-    private String tId;  //
+    private int transId;  //
     private User sender;  //交易发起方
     private User receiver;  //交易接收方
     private String TranDescription;  //交易内容
     private boolean isComplete;  //交易是否完成
     private String Consultation;  //协商历史
 
-    public String gettId() {
-        return tId;
+    public int getTransId() {
+        return transId;
     }
 
-    public void settId(String tId) {
-        this.tId = tId;
+    public void setTransId(int transId) {
+        this.transId = transId;
     }
 
     public User getSender() {

@@ -16,5 +16,5 @@ public interface BPManageService {
 
     List<BPContract> getWaitingContract();  //获得待处理的合作请求
 
-    List<BPContract> getAllContractsByBPId(String bpId);  //处理业务流程时，需要根据流程id获得与登录用户相关的所有合约
+    List<BPContract> getAllContractsByBPId(int bpId);  //处理业务流程时，需要根据流程id获得与登录用户相关的所有合约
 }

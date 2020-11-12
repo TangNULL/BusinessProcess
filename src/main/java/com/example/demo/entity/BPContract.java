@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class BPContract {  //业务流程合约 即一次合作
-    private String contractId;
+    private int contractId;
     private String hash;  //由下面计算出的hash
     private User BPSender;  //合作发起方
     private User BPReceiver;  //合作接收方
@@ -14,11 +14,11 @@ public class BPContract {  //业务流程合约 即一次合作
     private String cooperationTime;  //合作时长
     private boolean isComplete;  //合作是否完成
 
-    public String getContractId() {
+    public int getContractId() {
         return contractId;
     }
 
-    public void setContractId(String contractId) {
+    public void setContractId(int contractId) {
         this.contractId = contractId;
     }
 

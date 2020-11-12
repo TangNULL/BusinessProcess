@@ -1,12 +1,21 @@
 package com.example.demo.entity;
 
 public class User {
+    private int userid;
     private String username;   //企业或者个人名
     private String password;   //密码
     private String identity;   //身份证明凭证
     private String description;  //企业简述
     private String coreBusiness; //核心业务
     private String assessment;  //资产评估
+
+    public int getUserid() {
+        return userid;
+    }
+
+    public void setUserid(int userid) {
+        this.userid = userid;
+    }
 
     public String getUsername() {
         return username;
