@@ -6,8 +6,8 @@ import java.util.List;
 public class BPContract {  //业务流程合约 即一次合作
     private int contractId;
     private String hash;  //由下面计算出的hash
-    private User BPSender;  //合作发起方
-    private User BPReceiver;  //合作接收方
+    private User BPSender;  //合作发起方   user 还是  userID就够了？？？？？
+    private User BPReceiver;  //合作接收方   user 还是  userID就够了？？？？？
     private Timestamp createTime;  //合作发起时间
     private String BPDescription;  //合作内容
     private List<Transaction> transactionList;  //（交易内容、是否完成、协商历史  json字符串 放在了transaction里面）
