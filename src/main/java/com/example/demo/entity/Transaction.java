@@ -2,8 +2,8 @@ package com.example.demo.entity;
 
 public class Transaction {
     private int transId;  //
-    private User sender;  //交易发起方
-    private User receiver;  //交易接收方
+    private User sender;  //交易发起方     user 还是  userID就够了？？？？？
+    private User receiver;  //交易接收方   user 还是  userID就够了？？？？？
     private String tranDescription;  //交易内容
     private boolean isComplete;  //交易是否完成
     private String consultation;  //协商历史
