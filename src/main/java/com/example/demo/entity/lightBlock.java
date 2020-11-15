@@ -1,9 +1,12 @@
 package com.example.demo.entity;
 
+import java.io.Serializable;
+
 /**
  * 轻节点上的区块，只包含区块头信息
  */
-public class lightBlock {
+public class lightBlock implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int blockId;  //区块高度
     private String hash;  //当前区块hash值
     private String preHash;  //前一个区块hash值
