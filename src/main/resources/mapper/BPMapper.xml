@@ -3,4 +3,98 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.BPMapper">
+
+
+    <select id="findLatestBP" resultMap="BusinessProcessMap">
+        select * from bpDescription bp where bp.blockId is not null order by bp.blockId desc limit 0,1;
+    </select>
+
+
+    <select id="findBPByBPId" resultMap="BusinessProcessMap">
+        select * from bpDescription bp where bp.bpId=#{bpId};
+    </select>
+
+    <select id="findBPsByBlockId" resultMap="BusinessProcessMap">
+        select * from bpDescription bp where bp.blockId=#{blockId};
+    </select>
+
+    <select id="findBPContractsByBPId" resultMap="contractMap">
+        select * from bpcontract c where c.contractId in (select bp.contractId from businessprocess bp where bp.bpId=#{businessProcessId});
+    </select>
+
+    <select id="findBPContractBycontractId" resultMap="contractMap">
+        select * from bpcontract c where c.contractId =#{contractId};
+    </select>
+
+    <select id="findWaitingBPContractsByUserId" resultMap="contractMap">
+        select * from bpcontract c where c.bpReceiverId=#{userId} and c.isReceiverAccepted=0;
+    </select>
+
+    <select id="findTransactionsByContractId" resultType="Transaction">
+        select * from transactionDescription t where t.transId in (select c.transId from cooperation c where c.contractId=#{contractId});
+    </select>
+
+    <select id="findAllBPIdsByUserId" resultType="Integer">
+        select distinct bpDes.bpId from bpDescription bpDes,businessprocess bp,bpcontract c where bpDes.bpId=bp.bpId and bp.contractId=c.contractId and (c.bpSenderId=#{userId} or c.bpReceiverId=#{userId});
+    </select>
+
+    <select id="findTransactionByTranId" resultType="Transaction">
+        select * from transactionDescription where transId=#{transId};
+    </select>
+
+
+    <update id="updateBPContract" parameterType="BPContract">
+        UPDATE bpcontract
+        <trim prefix="set" suffixOverrides=",">
+            <if test="cooperationTime!=null">cooperationTime=#{cooperationTime},</if>
+            <if test="isReceiverAccepted!=null">isReceiverAccepted=#{isReceiverAccepted},</if>
+            <if test="isSenderAck!=null">isSenderAck=#{isSenderAck},</if>
+            <if test="isReceiverAck!=null">isReceiverAck=#{isReceiverAck},</if>
+        </trim>
+        WHERE contractId=#{contractId}
+    </update>
+
+    <update id="updateTransaction" parameterType="Transaction">
+        UPDATE transactionDescription
+        <trim prefix="set" suffixOverrides=",">
+            <if test="hash!=null">hash=#{hash},</if>
+            <if test="completeTime!=null">completeTime=#{completeTime},</if>
+            <if test="isSenderAck!=null">isSenderAck=#{isSenderAck},</if>
+            <if test="isReceiverAck!=null">isReceiverAck=#{isReceiverAck},</if>
+            <if test="consultation!=null">consultation=#{consultation},</if>
+        </trim>
+        WHERE transId=#{transId}
+    </update>
+
+    <resultMap id="contractMap" type="com.example.demo.entity.BPContract">
+        <id column="contractId" jdbcType="INTEGER" property="contractId"/>
+        <result column="bpSenderId" jdbcType="INTEGER" property="bpSenderId"/>
+        <result column="bpReceiverId" jdbcType="INTEGER" property="bpReceiverId"/>
+        <result column="createTime" jdbcType="INTEGER" property="createTime"/>
+        <result column="bpDescription" jdbcType="VARCHAR" property="bpDescription"/>
+        <result column="cooperationTime" jdbcType="VARCHAR" property="cooperationTime"/>
+        <result column="isReceiverAccepted" jdbcType="BOOLEAN" property="isReceiverAccepted"/>
+        <result column="isSenderAck" jdbcType="BOOLEAN" property="isSenderAck"/>
+        <result column="isReceiverAck" jdbcType="BOOLEAN" property="isReceiverAck"/>
+        <collection column="contractId=contractId" property="transactionList"
+                    ofType="com.example.demo.entity.Transaction" select="findTransactionsByContractId">
+        </collection>
+    </resultMap>
+
+    <resultMap id="BusinessProcessMap" type="com.example.demo.entity.BusinessProcess">
+        <id column="bpId" jdbcType="INTEGER" property="bpId"/>
+
+        <result column="blockId" jdbcType="INTEGER" property="blockId"/>
+
+        <collection column="businessProcessId=bpId" property="userList"
+                    ofType="com.example.demo.entity.User" select="com.example.demo.mapper.UserMapper.findUsersByBPId">
+        </collection>
+
+        <collection column="businessProcessId=bpId" property="bpContractList"
+                    ofType="com.example.demo.entity.BPContract" select="findBPContractsByBPId">
+        </collection>
+
+    </resultMap>
+
+
 </mapper>

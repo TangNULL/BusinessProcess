@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.BusinessMapper">
+
+    <insert id="insertBPDescription" useGeneratedKeys="true" keyProperty="bpId">
+         insert into bpDescription ()
+    values
+    ()
+    </insert>
+
+
+    <insert id="insertContract" useGeneratedKeys="true" keyProperty="contractId" parameterType="BPContract">
+         insert into bpcontract (
+    bpSenderId,
+    bpReceiverId,
+    createTime,
+    bpDescription,
+    isReceiverAccepted,
+    isSenderAck,
+    isReceiverAck)
+    values
+    ( #{bpSenderId},
+    #{bpReceiverId},
+    now(),
+    #{bpDescription},
+    null,
+    false,
+    false)
+    </insert>
+
+
+    <insert id="insertBusinessProcess">
+        insert into businessprocess (bpId,contractId)
+        values
+            (#{bpId},#{contractId})
+    </insert>
+
+
+    <insert id="batchInsertTransactions" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="transId">
+        insert into transactionDescription (senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
+        values
+        <foreach collection="list" item="t" separator=",">
+            (#{t.senderId},#{t.receiverId},now(),#{t.tranDescription},false,false)
+        </foreach>
+    </insert>
+
+    <insert id="InsertTransaction" useGeneratedKeys="true" keyProperty="transId" parameterType="Transaction">
+         insert into transactionDescription (senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
+         values
+     (#{senderId},#{receiverId},now(),#{tranDescription},false,false)
+     </insert>
+
+
+    <insert id="batchInsertCooperation">
+        insert into cooperation (contractId,transId)
+        values
+        <foreach collection="list2" item="t" separator=",">
+            (#{contractId},#{t.transId})
+        </foreach>
+    </insert>
+
+
+</mapper>

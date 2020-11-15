@@ -4,46 +4,62 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class BPContract {  //业务流程合约 即一次合作
-    private int contractId;
-    private String hash;  //由下面计算出的hash
-    private User BPSender;  //合作发起方   user 还是  userID就够了？？？？？
-    private User BPReceiver;  //合作接收方   user 还是  userID就够了？？？？？
+    private Integer contractId;
+    //private String hash;  //由下面计算出的hash
+    private Integer bpSenderId;  //合作发起方   user 还是  userID就够了？？？？？
+    private Integer bpReceiverId;  //合作接收方   user 还是  userID就够了？？？？？
     private Timestamp createTime;  //合作发起时间
-    private String BPDescription;  //合作内容
+    private String bpDescription;  //合作内容
     private List<Transaction> transactionList;  //（交易内容、是否完成、协商历史  json字符串 放在了transaction里面）
     private String cooperationTime;  //合作时长
-    private boolean isComplete;  //合作是否完成
+    private Boolean isReceiverAccepted;  // 接收方接受合同
+    private Boolean isSenderAck;  // 发起方确认完成合同
+    private Boolean isReceiverAck;  // 接收方确认完成合同
 
-    public int getContractId() {
+    public BPContract(Integer bpSenderId, Integer bpReceiverId, String bpDescription) {
+        this.bpSenderId = bpSenderId;
+        this.bpReceiverId = bpReceiverId;
+        this.bpDescription = bpDescription;
+    }
+
+
+    public BPContract(Integer contractId, Integer bpSenderId, Integer bpReceiverId, Timestamp createTime, String bpDescription, String cooperationTime, int isReceiverAccepted, int isSenderAck, int isReceiverAck) {
+        this.contractId = contractId;
+        this.bpSenderId = bpSenderId;
+        this.bpReceiverId = bpReceiverId;
+        this.createTime = createTime;
+        this.bpDescription = bpDescription;
+        this.cooperationTime = cooperationTime;
+        this.isReceiverAccepted = isReceiverAccepted == 1 ? Boolean.TRUE : Boolean.FALSE;
+        this.isSenderAck = isSenderAck == 1 ? Boolean.TRUE : Boolean.FALSE;
+        this.isReceiverAck = isReceiverAck == 1 ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    public BPContract() {
+    }
+
+    public Integer getContractId() {
         return contractId;
     }
 
-    public void setContractId(int contractId) {
+    public void setContractId(Integer contractId) {
         this.contractId = contractId;
     }
 
-    public String getHash() {
-        return hash;
+    public Integer getBpSenderId() {
+        return bpSenderId;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setBpSenderId(Integer bpSenderId) {
+        this.bpSenderId = bpSenderId;
     }
 
-    public User getBPSender() {
-        return BPSender;
+    public Integer getBpReceiverId() {
+        return bpReceiverId;
     }
 
-    public void setBPSender(User BPSender) {
-        this.BPSender = BPSender;
-    }
-
-    public User getBPReceiver() {
-        return BPReceiver;
-    }
-
-    public void setBPReceiver(User BPReceiver) {
-        this.BPReceiver = BPReceiver;
+    public void setBpReceiverId(Integer bpReceiverId) {
+        this.bpReceiverId = bpReceiverId;
     }
 
     public Timestamp getCreateTime() {
@@ -54,12 +70,12 @@ public class BPContract {  //业务流程合约 即一次合作
         this.createTime = createTime;
     }
 
-    public String getBPDescription() {
-        return BPDescription;
+    public String getBpDescription() {
+        return bpDescription;
     }
 
-    public void setBPDescription(String BPDescription) {
-        this.BPDescription = BPDescription;
+    public void setBpDescription(String bpDescription) {
+        this.bpDescription = bpDescription;
     }
 
     public List<Transaction> getTransactionList() {
@@ -78,11 +94,27 @@ public class BPContract {  //业务流程合约 即一次合作
         this.cooperationTime = cooperationTime;
     }
 
-    public boolean isComplete() {
-        return isComplete;
+    public Boolean getReceiverAccepted() {
+        return isReceiverAccepted;
     }
 
-    public void setComplete(boolean complete) {
-        isComplete = complete;
+    public void setReceiverAccepted(Boolean receiverAccepted) {
+        isReceiverAccepted = receiverAccepted;
+    }
+
+    public Boolean getSenderAck() {
+        return isSenderAck;
+    }
+
+    public void setSenderAck(Boolean senderAck) {
+        isSenderAck = senderAck;
+    }
+
+    public Boolean getReceiverAck() {
+        return isReceiverAck;
+    }
+
+    public void setReceiverAck(Boolean receiverAck) {
+        isReceiverAck = receiverAck;
     }
 }

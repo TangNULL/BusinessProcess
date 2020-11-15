@@ -3,7 +3,40 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.UserMapper">
-    <select id="getUserByIdentity" resultType="User">
-        select userid,username,password,identity,description,coreBusiness,assessment from user where identity = #{identity};
+    <select id="findUserByIdentity" resultType="User">
+        select * from user where identity = #{identity};
     </select>
+
+    <select id="findUserById" resultType="User">
+        select * from user where identity = #{id};
+    </select>
+
+    <select id="findUserLike" resultType="User">
+        select * from user where username like concat('%',#{s,jdbcType=VARCHAR},'%') or identity like concat('%',#{s,jdbcType=VARCHAR},'%') or description like concat('%',#{s,jdbcType=VARCHAR},'%') or coreBusiness like  concat('%',#{s,jdbcType=VARCHAR},'%') or assessment like concat('%',#{s,jdbcType=VARCHAR},'%');
+    </select>
+
+    <select id="findAllUsers" resultType="User">
+        select * from user;
+    </select>
+
+    <select id="findUsersByBPId" resultType="User">
+        select * from user u where u.userid in (select bpSenderId from bpcontract c,businessprocess bp where c.contractId=bp.contractId and bp.bpId=#{businessProcessId}) or u.userid in (select bpReceiverId from bpcontract c,businessprocess bp where c.contractId=bp.contractId and bp.bpId=#{businessProcessId});
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userid" parameterType="User">
+         insert into user (
+    username,
+    password,
+    identity,
+    description,
+    coreBusiness,
+    assessment)
+    values
+    ( #{username},
+    #{password},
+    #{identity},
+    #{description},
+    #{coreBusiness},
+    #{assessment})
+    </insert>
 </mapper>

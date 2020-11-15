@@ -2,19 +2,29 @@ package com.example.demo.service;
 
 import com.example.demo.entity.BPContract;
 import com.example.demo.entity.BusinessProcess;
+import com.example.demo.entity.Transaction;
 
 import java.util.List;
 
 public interface BPManageService {
-    List<BPContract> getLatestContract();  //获得最新完成的合作
 
-    List<BusinessProcess> getBusinessProcessByBlockId();   //公有链监管部分得到某一区块中的业务流程
+    BusinessProcess getLatestBusinessProcess();  //获得最新完成的业务流程
+
+    List<BusinessProcess> getBusinessProcessesByBlockId(int blockId);   //公有链监管部分得到某一区块中的所有业务流程
 
     //获取登录用户相关的协作业务流程
-    //type的取值=>  all:所有的   doing：进行中的    waiting：待办的     done：已完成的
-    List<BusinessProcess> getAllBusinessProcessByUserIdentity(String type, String identity);
+    //首先找到业务流程的userList包含userId的BP
+    // all:至少有一个合同是userId接受了的 或者 存在一个合同是userId发起的
+    // waiting:all基础上，如果我是接收合同的人那么我应当接受了这个合同并且双方没有都确认完成，如果我是发起合同的人那么这个合同应当没被拒绝且双方没有都确认完成。
+    // unclosed:all基础上，存在一个合同 接收者未处理合作请求 或者（被对应receiver接受，并且至少一方没确认合同完成）
+    List<BusinessProcess> getBusinessProcessByUserIdAndType(String type, Integer userId);
 
-    List<BPContract> getWaitingContract();  //获得待处理的合作请求
+    List<BPContract> getWaitingContract(int userId);  //获得待处理的合作请求
+
+    List<BPContract> getContractsByBPIdAndUserId(int bpId, int userId);  //获得某一流程下与某用户相关的未结束的合同
 
     List<BPContract> getAllContractsByBPId(int bpId);  //处理业务流程时，需要根据流程id获得与登录用户相关的所有合约
+
+    List<Transaction> getTransactionsByBpId(int bpId);   //获得业务流程包含的所有transaction
+
 }
