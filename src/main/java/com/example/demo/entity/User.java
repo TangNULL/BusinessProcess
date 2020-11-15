@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 public class User {
-    private int userid;
+    private Integer userid;
     private String username;   //企业或者个人名
     private String password;   //密码
     private String identity;   //身份证明凭证
@@ -9,11 +9,30 @@ public class User {
     private String coreBusiness; //核心业务
     private String assessment;  //资产评估
 
-    public int getUserid() {
+    public User(Integer userid, String username, String password, String identity, String description, String coreBusiness, String assessment) {
+        this.userid = userid;
+        this.username = username;
+        this.password = password;
+        this.identity = identity;
+        this.description = description;
+        this.coreBusiness = coreBusiness;
+        this.assessment = assessment;
+    }
+
+    public User(String username, String password, String identity, String description, String coreBusiness, String assessment) {
+        this.username = username;
+        this.password = password;
+        this.identity = identity;
+        this.description = description;
+        this.coreBusiness = coreBusiness;
+        this.assessment = assessment;
+    }
+
+    public Integer getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(Integer userid) {
         this.userid = userid;
     }
 
