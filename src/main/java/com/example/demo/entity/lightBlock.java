@@ -7,16 +7,16 @@ import java.io.Serializable;
  */
 public class lightBlock implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int blockId;  //区块高度
+    private Integer blockId;  //区块高度
     private String hash;  //当前区块hash值
     private String preHash;  //前一个区块hash值
     private long timestamp;  //生成当前区块时间戳
 
-    public int getBlockId() {
+    public Integer getBlockId() {
         return blockId;
     }
 
-    public void setBlockId(int blockId) {
+    public void setBlockId(Integer blockId) {
         this.blockId = blockId;
     }
 
