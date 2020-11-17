@@ -1,5 +1,8 @@
 package com.example.demo.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.example.demo.entity.Block;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
@@ -36,5 +39,19 @@ public class CryptoUtil {
             builder.append(temp);
         }
         return builder.toString();
+    }
+
+    /**
+     * 计算当前区块的哈希值
+     *
+     * @param curBlock
+     * @return 当前区块的哈希值
+     */
+    public static String calcBlockHash(Block curBlock) {
+        String preHash = curBlock.getPreHash();
+        String strUser = JSON.toJSONString(curBlock.getUsers());
+        String strTx = JSON.toJSONString(curBlock.getTxs());
+        String nonce = String.valueOf(curBlock.getNonce());
+        return CryptoUtil.SHA256(preHash + strUser + strTx + nonce);
     }
 }

@@ -6,11 +6,12 @@ import java.util.List;
 /**
  * 区块block的数据结构
  */
-public class Block extends lightBlock implements Serializable  {
-    private static final long serialVersionUID = 1L;
+public class Block extends lightBlock {
+
     private List<Transaction> txs;  //当前区块包含的业务流程
     private List<User> users;  //当前区块包含的用户信息
     private List<Data> data;  //当前区块包含的用户数据
+
 
     public List<Transaction> getTxs() {
         return txs;
