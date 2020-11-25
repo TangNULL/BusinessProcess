@@ -6,9 +6,12 @@ import com.example.demo.entity.Transaction;
 import com.example.demo.mapper.BPMapper;
 import com.example.demo.mapper.BusinessMapper;
 import com.example.demo.service.BusinessService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,14 +55,23 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public void confirmBusinessProcessCompletion(String whichPart, int contractId) {
-        BPContract bpContract = new BPContract();
-        bpContract.setContractId(contractId);
-        if (whichPart.equals("sender")) {
-            bpContract.setSenderAck(true);
-        } else
-            bpContract.setReceiverAck(true);
-        bpMapper.updateBPContract(bpContract);
+    public void confirmBusinessProcessCompletion(Integer userId, int bpId) {
+        BusinessProcess businessProcess = bpMapper.findBPByBPId(bpId);
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
+        List<String> list = gson.fromJson(businessProcess.getAckUsers(), type);
+        List<Integer> userIdlist = new ArrayList<>();
+        for (String s : list) {
+            userIdlist.add(Integer.parseInt(s));
+        }
+        userIdlist.add(userId);
+        if (userIdlist.size() == businessProcess.getUserList().size()) {
+            Timestamp comTime = new Timestamp(System.currentTimeMillis());
+            businessProcess.setCompleteTime(comTime);
+        }
+        businessProcess.setAckUsers(gson.toJson(userIdlist));
+        bpMapper.updateBP(businessProcess);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class PcController {
             latestTransactionList = ConvertObjectUtil.convertTransactionToLatestTransaction(bp.getBpId(), transactionList);
             response = new IResponse(0, latestTransactionList);
         } else
-            response = new IResponse(0, "没有查询到结果");
+            response = new IResponse(1, "没有查询到结果");
         return response;
     }
 

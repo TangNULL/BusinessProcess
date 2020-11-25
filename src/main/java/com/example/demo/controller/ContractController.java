@@ -3,11 +3,14 @@ package com.example.demo.controller;
 import com.example.demo.entity.*;
 import com.example.demo.service.BPManageService;
 import com.example.demo.service.BusinessService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,19 +23,27 @@ public class ContractController {
     BusinessService businessService;
 
     @RequestMapping("/cooperate")
-    public IResponse creatCooperate(@RequestParam Integer senderId, @RequestParam Integer receiverId, @RequestParam Integer bpId, @RequestParam String bpDescription, @RequestParam String transJson) {
+    public IResponse creatCooperate(@RequestParam Integer senderId, @RequestParam Integer receiverId, @RequestParam Integer bpId, @RequestParam String bpDescription, @RequestParam String transactionList) {
         IResponse response = null;
         //把交易的json解析出来
+        transactionList = "[{senderId:3,receiverId:4,tranDescription:交易内容}]";
+
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Transaction>>() {
+        }.getType();
+        List<Transaction> list = gson.fromJson(transactionList, type);
+
         String s = "";
         int code = 0;
-        List<Transaction> transactionList = new ArrayList<>();
+        /*List<Transaction> transactionList = new ArrayList<>();
         transactionList.add(new Transaction(1, 2, "1 give 2 3yuan"));
-        transactionList.add(new Transaction(2, 1, "2 give 1 2 bags"));
+        transactionList.add(new Transaction(2, 1, "2 give 1 2 bags"));*/
         if (bpId == null || bpId.equals("")) {
             bpId = null;
         }
         try {
-            businessService.creatCooperate(senderId, receiverId, bpId, bpDescription, transactionList);
+            businessService.creatCooperate(senderId, receiverId, bpId, bpDescription, list);
             s = "发起合作成功";
         } catch (Exception e) {
             s = "发起合作失败";
@@ -118,15 +129,15 @@ public class ContractController {
     }
 
     @RequestMapping("/completeCooperation")
-    public IResponse completeCooperation(@RequestParam String whichPart, @RequestParam Integer contractId) {
+    public IResponse completeCooperation(@RequestParam Integer userId, @RequestParam Integer bpId) {
         IResponse response;
         String s;
         int code = 0;
         try {
-            businessService.confirmBusinessProcessCompletion(whichPart, contractId);
-            s = "合同完成确认成功";
+            businessService.confirmBusinessProcessCompletion(userId, bpId);
+            s = "分支完成确认成功";
         } catch (Exception e) {
-            s = "合同完成确认失败";
+            s = "分支完成确认失败";
             code = 1;
             e.printStackTrace();
         }

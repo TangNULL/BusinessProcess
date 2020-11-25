@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>公有链</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Page-Level Plugin CSS - Forms -->
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/publicChain.css" rel="stylesheet">
+    <style>
+        .table tbody tr td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">交易系统</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <!--<a class="dropdown-toggle" data-toggle="dropdown" href="/pcSupervision">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>-->
+                <a class="dropdown-toggle" id="pcSupervisionBtn" href="/pcSupervision">公有链监管</a>
+            </li>
+
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+
+                    <li>
+                        <a id="publicChainBtn" href="/publicChain"><i class="fa fa-dashboard fa-fw"></i> 公有链</a>
+                    </li>
+                    <!--<li>
+                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="flot.html">Flot Charts</a>
+                            </li>
+                            <li>
+                                <a href="morris.html">Morris.js Charts</a>
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>-->
+                    <li>
+                        <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> 我的联盟链</a>
+                    </li>
+                    <li>
+                        <a id="bpRecordBtn" href="/bpRecord"><i class="fa fa-edit fa-fw"></i> 我的流程记录</a>
+                    </li>
+                    <!--<li>
+                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="panels-wells.html">Panels and Wells</a>
+                            </li>
+                            <li>
+                                <a href="buttons.html">Buttons</a>
+                            </li>
+                            <li>
+                                <a href="notifications.html">Notifications</a>
+                            </li>
+                            <li>
+                                <a href="typography.html">Typography</a>
+                            </li>
+                            <li>
+                                <a href="grid.html">Grid</a>
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Third Level <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                </ul>
+                                &lt;!&ndash; /.nav-third-level &ndash;&gt;
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="blank.html">Blank Page</a>
+                            </li>
+                            <li>
+                                <a href="login.html">Login Page</a>
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>-->
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <div id="page-wrapper">
+        <!--<div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Forms</h1>
+            </div>
+            &lt;!&ndash; /.col-lg-12 &ndash;&gt;
+        </div>-->
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-6">
+                <table class="table table-bordered" style='table-layout:fixed;'>
+                    <caption>最新的区块</caption>
+                    <thead>
+                    <tr>
+                        <th>区块高度</th>
+                        <th>挖出经过的时间</th>
+                        <th>矿工</th>
+                        <th>用户</th>
+                    </tr>
+                    </thead>
+                    <tbody id="latestBlocks">
+                    <tr>
+                        <td>127654</td>
+                        <td>20s</td>
+                        <td>u1</td>
+                        <td>??</td>
+                    </tr>
+                    <tr>
+                        <td>127653</td>
+                        <td>40s</td>
+                        <td>u2</td>
+                        <td>??</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-6">
+                <table class="table table-bordered" style='table-layout:fixed;'>
+                    <caption>最新的业务流程</caption>
+                    <thead>
+                    <tr>
+                        <th>协作业务流程</th>
+                        <th>哈希值</th>
+                        <th>合作发起方</th>
+                        <th>合作接收方</th>
+                        <th>合作时长</th>
+                    </tr>
+                    </thead>
+                    <tbody id="latestTx">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-6">
+                <table class="table table-bordered" style='table-layout:fixed;'>
+                    <caption>企业/个人列表</caption>
+                    <thead>
+                    <tr>
+                        <th>企业全称/个人姓名</th>
+                        <th>企业简述</th>
+                        <th>企业核心业务</th>
+                        <th>企业资产评估</th>
+                    </tr>
+                    </thead>
+                    <tbody id="users">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-6">
+                <div>
+                    <p id="userdetailName" style="margin: 20px;margin-top: 30px">企业/个人详情</p>
+                    <p id="userdetailidentity" style="margin: 20px"></p>
+                    <p id="userdetaildescription" style="margin: 20px"></p>
+                    <p id="userdetailcoreBusiness" style="margin: 20px"></p>
+                    <p id="userdetailassessment" style="margin: 20px"></p>
+                </div>
+                <button onclick="getBPwhichCanStartNewContract()" type="button" class="btn btn-primary"
+                        style="margin-left: 300px;margin-top: 100px">合作
+                </button>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Core Scripts - Include with every page -->
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/pc1.js"></script>
+
+<!-- Page-Level Plugin Scripts - Forms -->
+
+<!-- SB Admin Scripts - Include with every page -->
+<script src="js/pc2.js"></script>
+
+<!-- Page-Level Demo Scripts - Forms - Use for reference -->
+<script>
+    const paramsStr = window.location.search
+    const params = new URLSearchParams(paramsStr)
+    var identity = params.get('identity') // list
+    var userId = params.get('userId')
+    document.getElementById("publicChainBtn").setAttribute("href", "/publicChain?identity=" + identity + "&userId=" + userId);
+    document.getElementById("consortiumChainBtn").setAttribute("href", "/consortiumChain?identity=" + identity + "&userId=" + userId);
+    document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
+    document.getElementById("pcSupervisionBtn").setAttribute("href", "/pcSupervision?identity=" + identity + "&userId=" + userId);
+    $.ajax({
+        type: "GET",
+        url: "/getLatestBusinessProcesses",
+        data: {},
+        success: function (respMsg) {
+            var str = ""
+            if (respMsg.code == 0) {
+                var txs = respMsg.data
+                for (i in txs) {
+                    str += "<tr>"
+                    str += "<td>"
+                    str += txs[i].bpId
+                    str += "</td><td>"
+                    str += txs[i].hash
+                    str += "</td><td>"
+                    str += txs[i].sender
+                    str += "</td><td>"
+                    str += txs[i].receiver
+                    str += "</td><td>"
+                    str += txs[i].time
+                    str += "</td></tr>"
+                }
+                document.getElementById("latestTx").innerHTML = str
+            } else {
+                alert(respMsg.data)
+            }
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "/getAllUsers",
+        data: {},
+        success: function (respMsg) {
+            var str = ""
+            if (respMsg.code == 0) {
+                var users = respMsg.data
+                for (i in users) {
+                    str += "<tr>"
+                    str += "<td onclick=clickaction(\"" + users[i].identity + "\")>"
+                    str += users[i].username
+                    str += "</td><td onclick=clickaction(\"" + users[i].identity + "\")>"
+                    str += users[i].description
+                    str += "</td><td onclick=clickaction(\"" + users[i].identity + "\")>"
+                    str += users[i].coreBusiness
+                    str += "</td><td onclick=clickaction(\"" + users[i].identity + "\")>"
+                    str += users[i].assessment
+                    str += "</td></tr>"
+                }
+                document.getElementById("users").innerHTML = str
+            } else {
+                alert(respMsg.data)
+            }
+        }
+    });
+
+
+    function clickaction(iden) {
+        console.log(iden)
+        $.ajax({
+            type: "GET",
+            url: "/getUserByIdentity",
+            data: {identity: iden},
+            success: function (respMsg) {
+                if (respMsg.code == 0) {
+                    var user = respMsg.data
+                    document.getElementById("userdetailName").innerHTML = "企业/个人详情：" + user.username
+                    document.getElementById("userdetailidentity").innerHTML = "身份证明凭证：" + user.identity
+                    document.getElementById("userdetaildescription").innerHTML = "企业简述：" + user.description
+                    document.getElementById("userdetailcoreBusiness").innerHTML = "核心业务：" + user.coreBusiness
+                    document.getElementById("userdetailassessment").innerHTML = "资产评估：" + user.assessment
+                } else {
+                    alert(respMsg.data)
+                }
+            }
+        });
+    }
+
+    function getBPwhichCanStartNewContract() {
+        $.ajax({
+            type: "GET",
+            url: "/getBusinessProcessesByUserId",
+            data: {userId: userId, type: "waiting"},
+            success: function (respMsg) {
+                if (respMsg.code == 0) {
+                    for (var x of respMsg.data) {
+                        var anticipantSet = new Set()
+                        var bpContractListArr = new Array()
+                        var anticipants = x.userList
+                        for (var y of anticipants) {
+                            anticipantSet.add(y.username)
+                        }
+                        var bpContractList = x.bpContractList
+                        for (var y of bpContractList) {
+                            bpContractListArr.push(y.bpDescription)
+                        }
+                        for (var item of anticipantSet) {
+                            console.log(item)
+                        }
+                        for (var item of bpContractListArr) {
+                            console.log(item)
+                        }
+                    }
+                } else {
+                    alert(respMsg.data)
+                }
+            }
+        })
+        ;
+    }
+
+</script>
+
+</body>
+
+</html>

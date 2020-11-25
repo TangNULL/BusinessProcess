@@ -15,7 +15,7 @@ public interface BusinessService {  //核心业务流程
 
     void processCooperationRequest(int contractId, boolean cooperationResponse);  //处理其他用户发来的合作请求，同意or拒绝
 
-    void confirmBusinessProcessCompletion(String whichPart, int contractId);  //确认业务流程某一分支完成
+    void confirmBusinessProcessCompletion(Integer userId, int bpId);  //确认业务流程某一分支完成
 
     void processTxInCooperation(String whichPart, int transId);  // 确认完成合同里的某一条transaction
 }
