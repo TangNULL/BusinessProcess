@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>公有链监管</title>
+    <title>待处理的合作请求</title>
 
     <!-- Core CSS - Include with every page -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -161,11 +161,11 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">公有链监管</h1>
+                <h1 class="page-header">合作请求</h1>
             </div>
         </div>
         <!-- /.row -->
-        <div class="row" id="bps">
+        <div class="row" id="requests">
         </div>
         <!-- /.row -->
     </div>
@@ -192,56 +192,47 @@
     var userId = params.get('userId')
     document.getElementById("publicChainBtn").setAttribute("href", "/publicChain?identity=" + identity + "&userId=" + userId);
     document.getElementById("consortiumChainBtn").setAttribute("href", "/consortiumChain?identity=" + identity + "&userId=" + userId);
-   // document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
+    //document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
 
 
     $.ajax({
         type: "GET",
-        url: "/getBusinessProcessesByBlockId",
-        data: {blockId: 1},
+        url: "/getWaitingCooperationRequest",
+        data: {userId: userId},
         success: function (respMsg) {
             if (respMsg.code == 0) {
                 for (var x of respMsg.data) {
-                    var anticipantSet = new Array()
-                    var txArr = new Array()
-                    for (var y of x.userList) {
-                        anticipantSet.push(y.username)
-                    }
-                    for (var y of x.bpContractList) {
-                        for (var z of y.transactionList) {
-                            if (z.hash == null) {
-                                continue
-                            }
-                            var tx = "Tx:" + z.hash + "   " + z.senderId + "-->" + z.receiverId
-                            txArr.push(tx)
-                        }
-                    }
-                    var usersStr = ""
-                    for (var item of anticipantSet) {
-                        usersStr = usersStr + item + " "
-                    }
                     var txStr = ""
                     var index = 1
-                    for (var item of txArr) {
-                        txStr = txStr + index + "." + item + " \n"
+                    var blue = false
+                    for (var item of x.transactionList) {
+                        if (x.receiverAccepted == true && (!item.senderAck || !item.receiverAck)) {
+                            blue = true
+                        }
+                        txStr = txStr + "<p class='col-lg-11'>" + index + "." + JSON.stringify(item) + "</p>\n"
                         index++
                     }
-                    var bpshtml = "<div class=\"col-lg-12\">\n" +
-                        "                <div class=\"panel panel-default\">\n" +
+                    var conType = ""
+
+                    conType = "<div class=\"panel panel-default\">\n"
+
+                    var conshtml = "<div class=\"col-lg-12\">\n" +
+                        conType +
                         "                    <div class=\"panel-heading\">\n" +
-                        "                        协作业务流程：" + x.bpId + "\n" +
+                        "                        contractId：" + x.contractId + "\n" +
                         "                    </div>\n" +
                         "                    <div class=\"panel-body\">\n" +
-                        "                        <p>参与组织：" + usersStr + "</p>\n" +
+                        "                        <p>发起人Id：" + x.bpSenderId + "</p>\n" +
+                        "                        <p>接收人Id：" + x.bpReceiverId + "</p>\n" +
+                        "                        <p>合同描述：" + x.bpDescription + "</p>\n" +
                         "                        <p>合作实例：" + "</p>\n" +
-                        "                        <p>" + txStr + "</p>\n" +
+                        txStr +
                         "                    </div>\n" +
-                        "                    <div class=\"panel-footer\">\n" +
-                        "                        所在区块：" + x.blockId + "\n" +
-                        "                    </div>\n" +
+                        "<button type='button' class='btn btn-success' onclick=\"agreeCoop('" + x.contractId + "')\">同意合作</button>" +
+                        "<button type='button' class='btn btn-danger col-lg-offset-1' onclick=\"disAgreeCoop('" + x.contractId + "')\">拒绝合作</button>" +
                         "                </div>\n" +
                         "            </div>"
-                    document.getElementById("bps").innerHTML += bpshtml
+                    document.getElementById("requests").innerHTML += conshtml
                 }
             } else {
                 alert(respMsg.data)
@@ -249,6 +240,38 @@
         }
     })
     ;
+
+    function agreeCoop(contractId) {
+        $.ajax({
+            type: "GET",
+            url: "/processCooperationRequest",
+            data: {contractId: contractId, processResult: true},
+            success: function (respMsg) {
+                if (respMsg.code == 0) {
+                    alert(respMsg.data)
+                    location.reload();
+                } else {
+                    alert(respMsg.data)
+                }
+            }
+        });
+    }
+
+    function disAgreeCoop(contractId) {
+        $.ajax({
+            type: "GET",
+            url: "/processCooperationRequest",
+            data: {contractId: contractId, processResult: false},
+            success: function (respMsg) {
+                if (respMsg.code == 0) {
+                    alert(respMsg.data)
+                    location.reload();
+                } else {
+                    alert(respMsg.data)
+                }
+            }
+        });
+    }
 
 
 </script>

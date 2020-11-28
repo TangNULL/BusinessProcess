@@ -181,7 +181,6 @@
             success: function (respMsg) {
                 console.log(respMsg.data)
                 if (respMsg.code == 0) {
-                    alert("登录成功！")
                     window.location.href = "/publicChain?identity=" + $("#identity").val() + "&userId=" + respMsg.data.userid;
                 } else {
                     alert(respMsg.data)

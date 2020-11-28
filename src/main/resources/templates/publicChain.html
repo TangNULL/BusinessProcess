@@ -44,9 +44,6 @@
         <ul class="nav navbar-top-links navbar-right">
             <!-- /.dropdown -->
             <li class="dropdown">
-                <!--<a class="dropdown-toggle" data-toggle="dropdown" href="/pcSupervision">
-                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                </a>-->
                 <a class="dropdown-toggle" id="pcSupervisionBtn" href="/pcSupervision">公有链监管</a>
             </li>
 
@@ -63,12 +60,8 @@
                     <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                     </li>
                 </ul>
-                <!-- /.dropdown-user -->
             </li>
-
-            <!-- /.dropdown -->
         </ul>
-        <!-- /.navbar-top-links -->
 
         <div class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
@@ -77,86 +70,11 @@
                     <li>
                         <a id="publicChainBtn" href="/publicChain"><i class="fa fa-dashboard fa-fw"></i> 公有链</a>
                     </li>
-                    <!--<li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="flot.html">Flot Charts</a>
-                            </li>
-                            <li>
-                                <a href="morris.html">Morris.js Charts</a>
-                            </li>
-                        </ul>
-                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
-                    </li>-->
                     <li>
                         <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> 我的联盟链</a>
                     </li>
-                    <li>
+                   <!-- <li>
                         <a id="bpRecordBtn" href="/bpRecord"><i class="fa fa-edit fa-fw"></i> 我的流程记录</a>
-                    </li>
-                    <!--<li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="panels-wells.html">Panels and Wells</a>
-                            </li>
-                            <li>
-                                <a href="buttons.html">Buttons</a>
-                            </li>
-                            <li>
-                                <a href="notifications.html">Notifications</a>
-                            </li>
-                            <li>
-                                <a href="typography.html">Typography</a>
-                            </li>
-                            <li>
-                                <a href="grid.html">Grid</a>
-                            </li>
-                        </ul>
-                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Second Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Second Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Third Level <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                </ul>
-                                &lt;!&ndash; /.nav-third-level &ndash;&gt;
-                            </li>
-                        </ul>
-                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="blank.html">Blank Page</a>
-                            </li>
-                            <li>
-                                <a href="login.html">Login Page</a>
-                            </li>
-                        </ul>
-                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
                     </li>-->
                 </ul>
                 <!-- /#side-menu -->
@@ -167,15 +85,8 @@
     </nav>
 
     <div id="page-wrapper">
-        <!--<div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">Forms</h1>
-            </div>
-            &lt;!&ndash; /.col-lg-12 &ndash;&gt;
-        </div>-->
-        <!-- /.row -->
         <div class="row">
-            <div class="col-lg-6">
+            <!--<div class="col-lg-6">
                 <table class="table table-bordered" style='table-layout:fixed;'>
                     <caption>最新的区块</caption>
                     <thead>
@@ -201,14 +112,15 @@
                     </tr>
                     </tbody>
                 </table>
-            </div>
+            </div>-->
 
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <table class="table table-bordered" style='table-layout:fixed;'>
                     <caption>最新的业务流程</caption>
                     <thead>
                     <tr>
-                        <th>协作业务流程</th>
+                        <th>trace_id</th>
+                        <th>activity_name</th>
                         <th>哈希值</th>
                         <th>合作发起方</th>
                         <th>合作接收方</th>
@@ -227,8 +139,8 @@
                     <tr>
                         <th>企业全称/个人姓名</th>
                         <th>企业简述</th>
-                        <th>企业核心业务</th>
-                        <th>企业资产评估</th>
+                        <!--  <th>企业核心业务</th>
+                          <th>企业资产评估</th>-->
                     </tr>
                     </thead>
                     <tbody id="users">
@@ -237,16 +149,55 @@
             </div>
 
             <div class="col-lg-6">
-                <div>
+                <!--<div>
                     <p id="userdetailName" style="margin: 20px;margin-top: 30px">企业/个人详情</p>
                     <p id="userdetailidentity" style="margin: 20px"></p>
                     <p id="userdetaildescription" style="margin: 20px"></p>
                     <p id="userdetailcoreBusiness" style="margin: 20px"></p>
                     <p id="userdetailassessment" style="margin: 20px"></p>
-                </div>
-                <button onclick="getBPwhichCanStartNewContract()" type="button" class="btn btn-primary"
-                        style="margin-left: 300px;margin-top: 100px">合作
+                </div>-->
+                <button class="btn btn-primary col-sm-offset-1 col-sm-5" data-toggle="modal" data-target="#myModal">
+                    发起业务流程
                 </button>
+            </div>
+
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">发起业务流程</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>请选择要合作的企业</label>
+                                <select class="form-control" id="selectReceiver">
+
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>合作内容描述</label>
+                                <input class="form-control" id="bpDescription">
+                            </div>
+
+                            <div class="form-group">
+                                <label>JSON格式的Tx列表</label>
+                                <textarea id="txsJson" class="form-control" rows="5"
+                                          placeholder="[{senderId:**,receiverId:**,tranDescription:*****}]"></textarea>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="createBP()">提交</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -275,7 +226,7 @@
     var userId = params.get('userId')
     document.getElementById("publicChainBtn").setAttribute("href", "/publicChain?identity=" + identity + "&userId=" + userId);
     document.getElementById("consortiumChainBtn").setAttribute("href", "/consortiumChain?identity=" + identity + "&userId=" + userId);
-    document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
+    //document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
     document.getElementById("pcSupervisionBtn").setAttribute("href", "/pcSupervision?identity=" + identity + "&userId=" + userId);
     $.ajax({
         type: "GET",
@@ -289,6 +240,8 @@
                     str += "<tr>"
                     str += "<td>"
                     str += txs[i].bpId
+                    str += "</td><td>"
+                    str += txs[i].tranDescription
                     str += "</td><td>"
                     str += txs[i].hash
                     str += "</td><td>"
@@ -320,10 +273,10 @@
                     str += users[i].username
                     str += "</td><td onclick=clickaction(\"" + users[i].identity + "\")>"
                     str += users[i].description
-                    str += "</td><td onclick=clickaction(\"" + users[i].identity + "\")>"
+                    /*str += "</td><td onclick=clickaction(\"" + users[i].identity + "\")>"
                     str += users[i].coreBusiness
                     str += "</td><td onclick=clickaction(\"" + users[i].identity + "\")>"
-                    str += users[i].assessment
+                    str += users[i].assessment*/
                     str += "</td></tr>"
                 }
                 document.getElementById("users").innerHTML = str
@@ -333,10 +286,32 @@
         }
     });
 
+    $.ajax({
+        type: "GET",
+        url: "/getAllUsers",
+        data: {},
+        success: function (respMsg) {
+            var str = ""
+            if (respMsg.code == 0) {
+                var users = respMsg.data
+                for (i in users) {
+                    if (users[i].userid == userId)
+                        continue
+                    str += "<option id='" + users[i].userid + "'>"
+                    str += users[i].username + " " + users[i].description
+                    str += "</option>"
+                }
+                document.getElementById("selectReceiver").innerHTML = str
+            } else {
+                alert(respMsg.data)
+            }
+        }
+    });
+
 
     function clickaction(iden) {
         console.log(iden)
-        $.ajax({
+        /*$.ajax({
             type: "GET",
             url: "/getUserByIdentity",
             data: {identity: iden},
@@ -352,40 +327,33 @@
                     alert(respMsg.data)
                 }
             }
-        });
+        });*/
     }
 
-    function getBPwhichCanStartNewContract() {
+    function createBP() {
+        var receiverId = $("#selectReceiver option:selected").attr('id')
+        var txsJson = $("#txsJson").val()
+        var bpDescription = $("#bpDescription").val()
         $.ajax({
-            type: "GET",
-            url: "/getBusinessProcessesByUserId",
-            data: {userId: userId, type: "waiting"},
+            type: "POST",
+            url: "/cooperate",
+            data: {
+                senderId: userId,
+                receiverId: receiverId,
+                bpDescription: bpDescription,
+                bpId: "",
+                transactionList: txsJson
+            },
+            dataType: "json",
             success: function (respMsg) {
                 if (respMsg.code == 0) {
-                    for (var x of respMsg.data) {
-                        var anticipantSet = new Set()
-                        var bpContractListArr = new Array()
-                        var anticipants = x.userList
-                        for (var y of anticipants) {
-                            anticipantSet.add(y.username)
-                        }
-                        var bpContractList = x.bpContractList
-                        for (var y of bpContractList) {
-                            bpContractListArr.push(y.bpDescription)
-                        }
-                        for (var item of anticipantSet) {
-                            console.log(item)
-                        }
-                        for (var item of bpContractListArr) {
-                            console.log(item)
-                        }
-                    }
+                    alert(respMsg.data)
+                    window.location.href = "/consortiumChain?" + "userId=" + userId + "&identity=" + identity
                 } else {
                     alert(respMsg.data)
                 }
             }
-        })
-        ;
+        });
     }
 
 </script>

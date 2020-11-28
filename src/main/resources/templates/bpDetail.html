@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>公有链监管</title>
+    <title>业务流程详细信息</title>
 
     <!-- Core CSS - Include with every page -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -84,72 +84,10 @@
                     <li>
                         <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> 我的联盟链</a>
                     </li>
-                    <!--<li>
+                   <!-- <li>
                         <a id="bpRecordBtn" href="/bpRecord"><i class="fa fa-edit fa-fw"></i> 我的流程记录</a>
                     </li>-->
-                    <!--<li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="panels-wells.html">Panels and Wells</a>
-                            </li>
-                            <li>
-                                <a href="buttons.html">Buttons</a>
-                            </li>
-                            <li>
-                                <a href="notifications.html">Notifications</a>
-                            </li>
-                            <li>
-                                <a href="typography.html">Typography</a>
-                            </li>
-                            <li>
-                                <a href="grid.html">Grid</a>
-                            </li>
-                        </ul>
-                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Second Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Second Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Third Level <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                </ul>
-                                &lt;!&ndash; /.nav-third-level &ndash;&gt;
-                            </li>
-                        </ul>
-                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="blank.html">Blank Page</a>
-                            </li>
-                            <li>
-                                <a href="login.html">Login Page</a>
-                            </li>
-                        </ul>
-                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
-                    </li>-->
+
                 </ul>
                 <!-- /#side-menu -->
             </div>
@@ -161,11 +99,11 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">公有链监管</h1>
+                <h1 class="page-header" id="bpIdNum"></h1>
             </div>
         </div>
         <!-- /.row -->
-        <div class="row" id="bps">
+        <div class="row" id="contracts">
         </div>
         <!-- /.row -->
     </div>
@@ -190,58 +128,48 @@
     const params = new URLSearchParams(paramsStr)
     var identity = params.get('identity') // list
     var userId = params.get('userId')
+    var bpId = params.get('bpId')
     document.getElementById("publicChainBtn").setAttribute("href", "/publicChain?identity=" + identity + "&userId=" + userId);
     document.getElementById("consortiumChainBtn").setAttribute("href", "/consortiumChain?identity=" + identity + "&userId=" + userId);
-   // document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
-
+    //document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
+    document.getElementById("bpIdNum").innerHTML = "业务流程：" + bpId
 
     $.ajax({
         type: "GET",
-        url: "/getBusinessProcessesByBlockId",
-        data: {blockId: 1},
+        url: "/getAllContractsPreByBPIdAndUserId",
+        data: {bpId: bpId, userId: userId},
         success: function (respMsg) {
             if (respMsg.code == 0) {
                 for (var x of respMsg.data) {
-                    var anticipantSet = new Array()
-                    var txArr = new Array()
-                    for (var y of x.userList) {
-                        anticipantSet.push(y.username)
-                    }
-                    for (var y of x.bpContractList) {
-                        for (var z of y.transactionList) {
-                            if (z.hash == null) {
-                                continue
-                            }
-                            var tx = "Tx:" + z.hash + "   " + z.senderId + "-->" + z.receiverId
-                            txArr.push(tx)
-                        }
-                    }
-                    var usersStr = ""
-                    for (var item of anticipantSet) {
-                        usersStr = usersStr + item + " "
-                    }
                     var txStr = ""
                     var index = 1
-                    for (var item of txArr) {
-                        txStr = txStr + index + "." + item + " \n"
+                    for (var item of x.transactionJsonList) {
+                        txStr = txStr + "<p>" + index + "." + item + "</p>\n"
                         index++
                     }
-                    var bpshtml = "<div class=\"col-lg-12\">\n" +
-                        "                <div class=\"panel panel-default\">\n" +
+                    var conType = ""
+                    if (x.receiverAccepted) {
+                        conType = "<div class=\"panel panel-success\">\n"
+                    } else if (x.receiverAccepted == false) {   //被拒绝的合同
+                        conType = "<div class=\"panel panel-danger\">\n"
+                    } else {  //未被处理的合同
+                        conType = "<div class=\"panel panel-default\">\n"
+                    }
+                    var conshtml = "<div class=\"col-lg-12\">\n" +
+                        conType +
                         "                    <div class=\"panel-heading\">\n" +
-                        "                        协作业务流程：" + x.bpId + "\n" +
+                        "                        contractId：" + x.contractId + "\n" +
                         "                    </div>\n" +
                         "                    <div class=\"panel-body\">\n" +
-                        "                        <p>参与组织：" + usersStr + "</p>\n" +
+                        "                        <p>发起人Name：" + x.bpSenderName + "</p>\n" +
+                        "                        <p>接收人Name：" + x.bpReceiverName + "</p>\n" +
+                        "                        <p>合同描述：" + x.bpDescription + "</p>\n" +
                         "                        <p>合作实例：" + "</p>\n" +
-                        "                        <p>" + txStr + "</p>\n" +
-                        "                    </div>\n" +
-                        "                    <div class=\"panel-footer\">\n" +
-                        "                        所在区块：" + x.blockId + "\n" +
+                        txStr +
                         "                    </div>\n" +
                         "                </div>\n" +
                         "            </div>"
-                    document.getElementById("bps").innerHTML += bpshtml
+                    document.getElementById("contracts").innerHTML += conshtml
                 }
             } else {
                 alert(respMsg.data)

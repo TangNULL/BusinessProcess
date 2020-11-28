@@ -55,27 +55,57 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public void confirmBusinessProcessCompletion(Integer userId, int bpId) {
+    public String confirmBusinessProcessCompletion(Integer userId, int bpId) {
         BusinessProcess businessProcess = bpMapper.findBPByBPId(bpId);
-        Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<String>>() {
-        }.getType();
-        List<String> list = gson.fromJson(businessProcess.getAckUsers(), type);
-        List<Integer> userIdlist = new ArrayList<>();
-        for (String s : list) {
-            userIdlist.add(Integer.parseInt(s));
+        String result = "";
+        boolean existTxNotComplete = false;
+        for (BPContract contract : businessProcess.getBpContractList()) {
+            if (contract.getBpSenderId() == userId || contract.getBpReceiverId() == userId) {
+                if (contract.getReceiverAccepted() == null) {
+                    result = "有一个关于您的合同还没被userId:" + contract.getBpReceiverId() + "处理";
+                    break;
+                } else if (contract.getReceiverAccepted()) {
+                    for (Transaction t : contract.getTransactionList()) {
+                        if (t.getSenderId() == userId || t.getReceiverId() == userId) {
+                            if (!t.getReceiverAck() || !t.getSenderAck()) {
+                                existTxNotComplete = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (existTxNotComplete) {
+                        result = "还有交易未完成";
+                        break;
+                    }
+                }
+
+            }
+
         }
-        userIdlist.add(userId);
-        if (userIdlist.size() == businessProcess.getUserList().size()) {
-            Timestamp comTime = new Timestamp(System.currentTimeMillis());
-            businessProcess.setCompleteTime(comTime);
+        if (!result.equals("")) {
+            return result;
+        } else {
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            List<String> list = gson.fromJson(businessProcess.getAckUsers(), type);
+            List<Integer> userIdlist = new ArrayList<>();
+            for (String s : list) {
+                userIdlist.add(Integer.parseInt(s));
+            }
+            userIdlist.add(userId);
+            if (userIdlist.size() == businessProcess.getUserList().size()) {
+                Timestamp comTime = new Timestamp(System.currentTimeMillis());
+                businessProcess.setCompleteTime(comTime);
+            }
+            businessProcess.setAckUsers(gson.toJson(userIdlist));
+            bpMapper.updateBP(businessProcess);
+            return result;
         }
-        businessProcess.setAckUsers(gson.toJson(userIdlist));
-        bpMapper.updateBP(businessProcess);
     }
 
     @Override
-    public void processTxInCooperation(String whichPart, int transId) {
+    public void processTxInCooperation(Integer userId, int transId) {
         Transaction t = bpMapper.findTransactionByTranId(transId);
         if (t.getReceiverAck() || t.getSenderAck()) {
             //加上这一个确认 这笔交易完成了
@@ -83,9 +113,9 @@ public class BusinessServiceImpl implements BusinessService {
             t.setCompleteTime(comTime);
             t.setHash();
         }
-        if (whichPart.equals("sender")) {
+        if (userId == t.getSenderId()) {
             t.setSenderAck(true);
-        } else
+        } else if (userId == t.getReceiverId())
             t.setReceiverAck(true);
         bpMapper.updateTransaction(t);
 

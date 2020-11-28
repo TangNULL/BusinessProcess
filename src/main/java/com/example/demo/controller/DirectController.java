@@ -24,4 +24,19 @@ public class DirectController {
     public String consortiumChain() {
         return "consortiumChain";
     }
+
+    @RequestMapping("/bpDetail")
+    public String bpDetail() {
+        return "bpDetail";
+    }
+
+    @RequestMapping("/bpDetailAndProcess")
+    public String bpDetailAndProcess() {
+        return "bpDetailAndProcess";
+    }
+
+    @RequestMapping("/coopRequestPage")
+    public String coopRequestPage() {
+        return "coopRequestPage";
+    }
 }

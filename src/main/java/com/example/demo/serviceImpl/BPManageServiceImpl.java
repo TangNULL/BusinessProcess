@@ -2,9 +2,11 @@ package com.example.demo.serviceImpl;
 
 import com.example.demo.entity.BPContract;
 import com.example.demo.entity.BusinessProcess;
+import com.example.demo.entity.BusinessProcessPre;
 import com.example.demo.entity.Transaction;
 import com.example.demo.mapper.BPMapper;
 import com.example.demo.service.BPManageService;
+import com.example.demo.utils.ConvertObjectUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +61,11 @@ public class BPManageServiceImpl implements BPManageService {
                 Gson gson = new Gson();
                 Type type1 = new TypeToken<ArrayList<String>>() {
                 }.getType();
-                List<String> userIdlist = gson.fromJson(bp.getAckUsers(), type1);
+                List<String> list = gson.fromJson(bp.getAckUsers(), type1);
+                List<Integer> userIdlist = new ArrayList<>();
+                for (String s : list) {
+                    userIdlist.add(Integer.parseInt(s));
+                }
                 if (!userIdlist.contains(userId)) {
                     result.add(bp);
                 }
@@ -109,6 +115,13 @@ public class BPManageServiceImpl implements BPManageService {
     }
 
     @Override
+    public List<BusinessProcessPre> getBusinessProcessPreByUserIdAndType(String type, Integer userId) {
+        List<BusinessProcess> businessProcesses = getBusinessProcessByUserIdAndType(type, userId);
+        List<BusinessProcessPre> businessProcessPres = ConvertObjectUtil.convertBPToBPPre(userId, businessProcesses);
+        return businessProcessPres;
+    }
+
+    @Override
     public List<BPContract> getWaitingContract(int userId) {
         return bpMapper.findWaitingBPContractsByUserId(userId);
     }
@@ -126,8 +139,20 @@ public class BPManageServiceImpl implements BPManageService {
                 }
             }
             boolean c = bpContract.getReceiverAccepted() == null ? false : bpContract.getReceiverAccepted();
-            boolean d = bpContract.getReceiverAccepted() == null ? true : bpContract.getReceiverAccepted();
-            if ((bpContract.getBpReceiverId() == userId && c && existTxNotBothAck) || (bpContract.getBpSenderId() == userId && d && existTxNotBothAck)) {
+            //boolean d = bpContract.getReceiverAccepted() == null ? true : bpContract.getReceiverAccepted();
+            if ((bpContract.getBpReceiverId() == userId && c && existTxNotBothAck) || (bpContract.getBpSenderId() == userId && existTxNotBothAck)) {
+                result.add(bpContract);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<BPContract> getAllContractsByBPIdAndUserId(int bpId, int userId) {
+        BusinessProcess bp = bpMapper.findBPByBPId(bpId);
+        List<BPContract> result = new ArrayList<>();
+        for (BPContract bpContract : bp.getBpContractList()) {
+            if (bpContract.getBpReceiverId() == userId || bpContract.getBpSenderId() == userId) {
                 result.add(bpContract);
             }
         }
