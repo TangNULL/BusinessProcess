@@ -2,13 +2,15 @@ package com.example.demo.entity;
 
 public class LatestTransaction {
     private int bpId;
+    private String tranDescription;
     private String hash;
     private int sender;
     private int receiver;
     private String time;
 
-    public LatestTransaction(int bpId, String hash, int sender, int receiver, String time) {
+    public LatestTransaction(int bpId, String tranDescription, String hash, int sender, int receiver, String time) {
         this.bpId = bpId;
+        this.tranDescription = tranDescription;
         this.hash = hash;
         this.sender = sender;
         this.receiver = receiver;
@@ -53,5 +55,13 @@ public class LatestTransaction {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getTranDescription() {
+        return tranDescription;
+    }
+
+    public void setTranDescription(String tranDescription) {
+        this.tranDescription = tranDescription;
     }
 }

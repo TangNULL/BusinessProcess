@@ -14,22 +14,24 @@ public class UserController {
     UserManageService userManageService;
 
     @RequestMapping("/login")
+    @ResponseBody
     public IResponse login(@RequestParam String identity, @RequestParam String password) {
         IResponse response;
         User u = userManageService.getUserByIdentity(identity);
         if (u != null && u.getPassword().equals(password)) {
             response = new IResponse(0, u);
         } else
-            response = new IResponse(0, "用户名或密码不正确");
+            response = new IResponse(1, "用户名或密码不正确");
         return response;
     }
 
     @RequestMapping("/register")
-    public IResponse login(@RequestParam String userName, @RequestParam String identity, @RequestParam String password) {
+    public IResponse register(@RequestParam String userName, @RequestParam String identity, @RequestParam String password) {
         IResponse response;
         boolean b = userManageService.addUser(userName, password, identity, "description", "人工智能", "huge");
         if (b) {
-            response = new IResponse(0, "注册成功");
+            User u = userManageService.getUserByIdentity(identity);
+            response = new IResponse(0, u);
         } else
             response = new IResponse(1, "注册失败");
         return response;
@@ -43,12 +45,12 @@ public class UserController {
         if (userList != null) {
             response = new IResponse(0, userList);
         } else
-            response = new IResponse(1, "查询失败");
+            response = new IResponse(0, "查询结果为空");
         return response;
     }
 
     @RequestMapping("/getIndistinctUsers")   //模糊查询
-    public IResponse getAllUsers(@RequestParam String like) {
+    public IResponse getIndistinctUsers(@RequestParam String like) {
         IResponse response;
         List<User> userList;
         userList = userManageService.getAllUsersIndistinct(like);
@@ -56,6 +58,18 @@ public class UserController {
             response = new IResponse(0, userList);
         } else
             response = new IResponse(0, "没有找到符合条件的用户");
+        return response;
+    }
+
+    @RequestMapping("/getUserByIdentity")
+    public IResponse getUserByIdentity(@RequestParam String identity) {
+        IResponse response;
+        User user;
+        user = userManageService.getUserByIdentity(identity);
+        if (user != null) {
+            response = new IResponse(0, user);
+        } else
+            response = new IResponse(0, "用户不存在");
         return response;
     }
 

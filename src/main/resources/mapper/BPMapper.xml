@@ -27,7 +27,7 @@
     </select>
 
     <select id="findWaitingBPContractsByUserId" resultMap="contractMap">
-        select * from bpcontract c where c.bpReceiverId=#{userId} and c.isReceiverAccepted=0;
+        select * from bpcontract c where c.bpReceiverId=#{userId} and c.isReceiverAccepted is null;
     </select>
 
     <select id="findTransactionsByContractId" resultType="Transaction">
@@ -46,10 +46,7 @@
     <update id="updateBPContract" parameterType="BPContract">
         UPDATE bpcontract
         <trim prefix="set" suffixOverrides=",">
-            <if test="cooperationTime!=null">cooperationTime=#{cooperationTime},</if>
             <if test="isReceiverAccepted!=null">isReceiverAccepted=#{isReceiverAccepted},</if>
-            <if test="isSenderAck!=null">isSenderAck=#{isSenderAck},</if>
-            <if test="isReceiverAck!=null">isReceiverAck=#{isReceiverAck},</if>
         </trim>
         WHERE contractId=#{contractId}
     </update>
@@ -66,16 +63,22 @@
         WHERE transId=#{transId}
     </update>
 
+    <update id="updateBP" parameterType="BusinessProcess">
+        UPDATE bpdescription
+        <trim prefix="set" suffixOverrides=",">
+            <if test="blockId!=null">blockId=#{blockId},</if>
+            <if test="ackUsers!=null">ackUsers=#{ackUsers},</if>
+            <if test="completeTime!=null">completeTime=#{completeTime},</if>
+        </trim>
+        WHERE bpId=#{bpId}
+    </update>
+
     <resultMap id="contractMap" type="com.example.demo.entity.BPContract">
         <id column="contractId" jdbcType="INTEGER" property="contractId"/>
         <result column="bpSenderId" jdbcType="INTEGER" property="bpSenderId"/>
         <result column="bpReceiverId" jdbcType="INTEGER" property="bpReceiverId"/>
-        <result column="createTime" jdbcType="INTEGER" property="createTime"/>
         <result column="bpDescription" jdbcType="VARCHAR" property="bpDescription"/>
-        <result column="cooperationTime" jdbcType="VARCHAR" property="cooperationTime"/>
         <result column="isReceiverAccepted" jdbcType="BOOLEAN" property="isReceiverAccepted"/>
-        <result column="isSenderAck" jdbcType="BOOLEAN" property="isSenderAck"/>
-        <result column="isReceiverAck" jdbcType="BOOLEAN" property="isReceiverAck"/>
         <collection column="contractId=contractId" property="transactionList"
                     ofType="com.example.demo.entity.Transaction" select="findTransactionsByContractId">
         </collection>
@@ -85,6 +88,9 @@
         <id column="bpId" jdbcType="INTEGER" property="bpId"/>
 
         <result column="blockId" jdbcType="INTEGER" property="blockId"/>
+        <result column="ackUsers" jdbcType="VARCHAR" property="ackUsers"/>
+        <result column="createTime" jdbcType="INTEGER" property="createTime"/>
+        <result column="completeTime" jdbcType="INTEGER" property="completeTime"/>
 
         <collection column="businessProcessId=bpId" property="userList"
                     ofType="com.example.demo.entity.User" select="com.example.demo.mapper.UserMapper.findUsersByBPId">

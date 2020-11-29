@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserMapper {
     User findUserByIdentity(String iden);
 
-    User findUserById(String id);
+    User findUserById(Integer id);
 
     Integer insertUser(User user);
 

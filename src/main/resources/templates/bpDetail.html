@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>业务流程详细信息</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Page-Level Plugin CSS - Forms -->
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/publicChain.css" rel="stylesheet">
+    <style>
+        .table tbody tr td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">交易系统</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+
+                    <li>
+                        <a id="publicChainBtn" href="/publicChain"><i class="fa fa-dashboard fa-fw"></i> 公有链</a>
+                    </li>
+                    <!--<li>
+                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="flot.html">Flot Charts</a>
+                            </li>
+                            <li>
+                                <a href="morris.html">Morris.js Charts</a>
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>-->
+                    <li>
+                        <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> 我的联盟链</a>
+                    </li>
+                   <!-- <li>
+                        <a id="bpRecordBtn" href="/bpRecord"><i class="fa fa-edit fa-fw"></i> 我的流程记录</a>
+                    </li>-->
+
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header" id="bpIdNum"></h1>
+            </div>
+        </div>
+        <!-- /.row -->
+        <div class="row" id="contracts">
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Core Scripts - Include with every page -->
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/pc1.js"></script>
+
+<!-- Page-Level Plugin Scripts - Forms -->
+
+<!-- SB Admin Scripts - Include with every page -->
+<script src="js/pc2.js"></script>
+
+<!-- Page-Level Demo Scripts - Forms - Use for reference -->
+<script>
+    const paramsStr = window.location.search
+    const params = new URLSearchParams(paramsStr)
+    var identity = params.get('identity') // list
+    var userId = params.get('userId')
+    var bpId = params.get('bpId')
+    document.getElementById("publicChainBtn").setAttribute("href", "/publicChain?identity=" + identity + "&userId=" + userId);
+    document.getElementById("consortiumChainBtn").setAttribute("href", "/consortiumChain?identity=" + identity + "&userId=" + userId);
+    //document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
+    document.getElementById("bpIdNum").innerHTML = "业务流程：" + bpId
+
+    $.ajax({
+        type: "GET",
+        url: "/getAllContractsPreByBPIdAndUserId",
+        data: {bpId: bpId, userId: userId},
+        success: function (respMsg) {
+            if (respMsg.code == 0) {
+                for (var x of respMsg.data) {
+                    var txStr = ""
+                    var index = 1
+                    for (var item of x.transactionJsonList) {
+                        txStr = txStr + "<p>" + index + "." + item + "</p>\n"
+                        index++
+                    }
+                    var conType = ""
+                    if (x.receiverAccepted) {
+                        conType = "<div class=\"panel panel-success\">\n"
+                    } else if (x.receiverAccepted == false) {   //被拒绝的合同
+                        conType = "<div class=\"panel panel-danger\">\n"
+                    } else {  //未被处理的合同
+                        conType = "<div class=\"panel panel-default\">\n"
+                    }
+                    var conshtml = "<div class=\"col-lg-12\">\n" +
+                        conType +
+                        "                    <div class=\"panel-heading\">\n" +
+                        "                        contractId：" + x.contractId + "\n" +
+                        "                    </div>\n" +
+                        "                    <div class=\"panel-body\">\n" +
+                        "                        <p>发起人Name：" + x.bpSenderName + "</p>\n" +
+                        "                        <p>接收人Name：" + x.bpReceiverName + "</p>\n" +
+                        "                        <p>合同描述：" + x.bpDescription + "</p>\n" +
+                        "                        <p>合作实例：" + "</p>\n" +
+                        txStr +
+                        "                    </div>\n" +
+                        "                </div>\n" +
+                        "            </div>"
+                    document.getElementById("contracts").innerHTML += conshtml
+                }
+            } else {
+                alert(respMsg.data)
+            }
+        }
+    })
+    ;
+
+
+</script>
+
+</body>
+
+</html>
