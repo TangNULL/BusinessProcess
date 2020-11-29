@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * 轻节点上的区块，只包含区块头信息
  */
-public class lightBlock implements Serializable {
+public class LightBlock implements Serializable {
     private static final long serialVersionUID = 1L;
     private int blockId;  //区块高度
     private long timestamp;  //生成当前区块时间戳

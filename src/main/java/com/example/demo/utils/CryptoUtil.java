@@ -2,6 +2,7 @@ package com.example.demo.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.Block;
+import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -39,6 +40,16 @@ public class CryptoUtil {
             builder.append(temp);
         }
         return builder.toString();
+    }
+
+    /**
+     * md5 哈希函数
+     * @param str
+     * @return
+     */
+    public static String MD5(String str) {
+        String resultStr = DigestUtils.md5DigestAsHex(str.getBytes());
+        return resultStr.substring(4, resultStr.length());
     }
 
     /**

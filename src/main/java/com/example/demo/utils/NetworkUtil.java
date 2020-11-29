@@ -7,7 +7,7 @@ public class NetworkUtil {
     /**
      * 获取本地ip
      */
-    public static String getIp() {
+    public static String getLocalAddress() {
         try {
             InetAddress ip4 = InetAddress.getLocalHost();
             return ip4.getHostAddress();

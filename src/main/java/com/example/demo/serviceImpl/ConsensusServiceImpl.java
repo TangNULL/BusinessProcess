@@ -1,8 +1,8 @@
 package com.example.demo.serviceImpl;
 
-import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.Block;
-import com.example.demo.entity.BlockChain;
+import com.example.demo.entity.LocalBlockChain;
+import com.example.demo.entity.Transaction;
 import com.example.demo.entity.User;
 import com.example.demo.service.ConsensusService;
 import com.example.demo.utils.CryptoUtil;
@@ -15,13 +15,18 @@ import java.util.List;
 public class ConsensusServiceImpl implements ConsensusService {
 
     @Override
-    public Block PoWMine(BlockChain blockChain) {
+    public Block PoWMine(LocalBlockChain blockChain) {
         Block newBlock = new Block();
         Block preBlock = blockChain.getLatestBlock();
         // 新区块属性
-        newBlock.setBlockId(blockChain.getBlockChain().size() + 1);
+        newBlock.setBlockId(preBlock.getBlockId() + 1);
         newBlock.setTimestamp(System.currentTimeMillis());
         newBlock.setPreHash(preBlock.getHash());
+
+        // 需要从交易池提取获得的数据
+        for (Transaction tx: blockChain.getTxCache()) {
+
+        }
 
         List<User> userList2 = new ArrayList<User>();
         userList2.add(new User("u3", "123456", "u1", "des", "core", "ass"));
@@ -48,14 +53,16 @@ public class ConsensusServiceImpl implements ConsensusService {
             System.out.println("第"+(nonce+1)+"次尝试计算的hash值：" + newBlock.getHash());
             nonce++;
 
-            //如果更新了区块链，则放弃挖矿
+            //如果本地区块链接收到了新的区块，则停止本次挖矿
+//            if( "".equals("")) {
+//
+//            }
         }
-
         return newBlock;
     }
 
     /**
-     * 验证是否挖到新的区块,暂时这样写，后续修改
+     * 验证是否挖到新的区块,暂时这样写，后续改成hash < target
      *
      * @param hash
      * @param target
@@ -67,4 +74,24 @@ public class ConsensusServiceImpl implements ConsensusService {
         return hash.startsWith("0000");
     }
 
+
+//    /**
+//     * 校验HASH的合法性
+//     *
+//     * @param hash
+//     * @param difficulty
+//     * @return
+//     */
+//    public static boolean isHashValid(String hash, int difficulty) {
+//        String prefix = repeat("0", difficulty);
+//        return hash.startsWith(prefix);
+//    }
+//
+//　　private static String repeat(String str, int repeat) {
+//        final StringBuilder buf = new StringBuilder();
+//        for (int i = 0; i < repeat; i++) {
+//            buf.append(str);
+//        }
+//        return buf.toString();
+//    }
 }

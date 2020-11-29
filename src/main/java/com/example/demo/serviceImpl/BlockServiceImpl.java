@@ -2,12 +2,10 @@ package com.example.demo.serviceImpl;
 
 import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.Block;
-import com.example.demo.entity.BlockChain;
-import com.example.demo.entity.Transaction;
+import com.example.demo.entity.LocalBlockChain;
 import com.example.demo.entity.User;
 import com.example.demo.service.BlockService;
 import com.example.demo.utils.CryptoUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,7 +13,7 @@ import java.util.*;
 @Service
 public class BlockServiceImpl implements BlockService {
 
-    BlockChain blockChain = new BlockChain();
+    LocalBlockChain blockChain = new LocalBlockChain();
 
     @Override
     public String createGenesisBlock() {
@@ -46,7 +44,6 @@ public class BlockServiceImpl implements BlockService {
         else {
             return "Error!";
         }
-
     }
 
     @Override
@@ -60,9 +57,9 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    // 这里最简单的判断条件，之后会添加完整
-    public boolean isValidBlock(Block preBlock, Block curBlock) {
-        if(preBlock.getHash().equals(curBlock.getPreHash())){
+    // 验证是否为最新区块
+    public boolean isValidBlock(Block lastBlock, Block curBlock) {
+        if(lastBlock.getHash().equals(curBlock.getPreHash())){
             return true;
         }
         return false;
@@ -73,11 +70,43 @@ public class BlockServiceImpl implements BlockService {
         return JSON.toJSONString(blockChain.getBlockChain());
     }
 
+//    @Override
+//    public boolean isValidChain(List<Block> otherChain) {
+//        Block block = null;
+//        Block lastBlock = otherChain.get(0);
+//        int currentIndex = 1;
+//        while (currentIndex < otherChain.size()) {
+//            block = otherChain.get(currentIndex);
+//            if (!isValidBlock(block, lastBlock)) {
+//                return false;
+//            }
+//            lastBlock = block;
+//            currentIndex++;
+//        }
+//        return true;
+//    }
+//
+//    @Override
+//    public void replaceChain(List<Block> otherChain) {
+//        List<Block> localBlockChain = blockChain.getBlockChain();
+////        List<Transaction> localpackedTransactions = blockChain.getPackedTransactions();
+//        if (isValidChain(otherChain) && otherChain.size() > localBlockChain.size()) {
+//            localBlockChain = otherChain;
+//            //替换已打包保存的业务数据集合
+////            localpackedTransactions.clear();
+////            localBlockChain.forEach(block -> {
+////                localpackedTransactions.addAll(block.getTransactions());
+////            });
+//            blockChain.setBlockChain(otherChain);
+////            blockChain.setPackedTransactions(localpackedTransactions);
+//            System.out.println("替换后的本节点区块链："+JSON.toJSONString(blockChain.getBlockChain()));
+//        } else {
+//            System.out.println("接收的区块链无效");
+//        }
+//    }
+
     @Override
-    public void updateTxCache(Block newBlock){
+    public void removeTxCache(Block newBlock){
         blockChain.getTxCache().removeAll(newBlock.getTxs());
     }
-
-
-
 }

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 区块block的数据结构
  */
-public class Block extends lightBlock {
+public class Block extends LightBlock {
 
     private List<Transaction> txs;  //当前区块包含的业务流程
     private List<User> users;  //当前区块包含的用户信息
