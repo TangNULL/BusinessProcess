@@ -20,6 +20,11 @@ public class UserManageServiceImpl implements UserManageService {
     }
 
     @Override
+    public User getUserById(Integer id) {
+        return userMapper.findUserById(id);
+    }
+
+    @Override
     public boolean addUser(String username, String password, String identity, String description, String coreBusiness, String assessment) {
         User u = new User(username, password, identity, description, coreBusiness, assessment);
         Integer userid = userMapper.insertUser(u);

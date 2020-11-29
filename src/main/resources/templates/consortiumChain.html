@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>我的联盟链</title>
+
+
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 引入bootstrap-table样式 -->
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+    <!-- jquery及bootstrapjs -->
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- bootstrap-table.min.js -->
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+    <!-- 引入中文语言包 -->
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/publicChain.css" rel="stylesheet">
+
+    <script src="js/pc1.js"></script>
+    <script src="js/pc2.js"></script>
+
+    <style>
+        .table tbody tr td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rrr {
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body onload="tableChange('all')">
+
+<div id="wrapper">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">交易系统</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+
+                    <li>
+                        <a id="publicChainBtn" href="/publicChain"><i class="fa fa-dashboard fa-fw"></i> 公有链</a>
+                    </li>
+                    <!--<li>
+                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="flot.html">Flot Charts</a>
+                            </li>
+                            <li>
+                                <a href="morris.html">Morris.js Charts</a>
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>-->
+                    <li>
+                        <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> 我的联盟链</a>
+                    </li>
+                    <!--<li>
+                        <a id="bpRecordBtn" href="/bpRecord"><i class="fa fa-edit fa-fw"></i> 我的流程记录</a>
+                    </li>-->
+                    <!--<li>
+                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="panels-wells.html">Panels and Wells</a>
+                            </li>
+                            <li>
+                                <a href="buttons.html">Buttons</a>
+                            </li>
+                            <li>
+                                <a href="notifications.html">Notifications</a>
+                            </li>
+                            <li>
+                                <a href="typography.html">Typography</a>
+                            </li>
+                            <li>
+                                <a href="grid.html">Grid</a>
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Third Level <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                </ul>
+                                &lt;!&ndash; /.nav-third-level &ndash;&gt;
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="blank.html">Blank Page</a>
+                            </li>
+                            <li>
+                                <a href="login.html">Login Page</a>
+                            </li>
+                        </ul>
+                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                    </li>-->
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <div id="page-wrapper">
+        <!--<div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Forms</h1>
+            </div>
+            &lt;!&ndash; /.col-lg-12 &ndash;&gt;
+        </div>-->
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12 text-center" style="margin-top: 40px;background-color: #F5F5F5;height: 100px">
+                <div class="col-lg-3 rrr" style="margin-top: 30px" onclick="getCoopRequest()">
+                    <p>待处理的合作请求</p>
+                    <p id="requestNum"></p>
+                </div>
+                <div class="col-lg-1" style="margin-top: 30px">
+                    <p>|</p>
+                </div>
+                <div class="col-lg-3" style="margin-top: 30px">
+                    <p>我正在进行的业务流程</p>
+                    <p id="unclosedBPNum"></p>
+                </div>
+                <div class="col-lg-1" style="margin-top: 30px">
+                    <p>|</p>
+                </div>
+                <div class="col-lg-3" style="margin-top: 30px">
+                    <p>已完成的业务流程</p>
+                    <p id="closedBPNum"></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12" style="margin-top: 30px">
+                <div class="col-lg-3"><p>我的业务流程列表</p></div>
+
+                <div class="col-lg-offset-3 col-lg-3 btn-group btn-group-toggle" data-toggle="buttons"
+                     style="color: #2e6da4">
+                    <label class="btn btn-secondary active" onclick="tableChange('all')">
+                        <input type="radio" name="options" id="option1" autocomplete="off" checked> 全部
+                    </label>
+                    <label class="btn btn-secondary" onclick="tableChange('unclosed')">
+                        <input type="radio" name="options" id="option2" autocomplete="off"> 进行中
+                    </label>
+                    <label class="btn btn-secondary" onclick="tableChange('waiting')">
+                        <input type="radio" name="options" id="option3" autocomplete="off"> 待办
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-12" style="background-color: #F5F5F5;">
+                <table id="mytab" class="table table-hover">
+                </table>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Page-Level Demo Scripts - Forms - Use for reference -->
+<script>
+    const paramsStr = window.location.search
+    const params = new URLSearchParams(paramsStr)
+    var identity = params.get('identity') // list
+    var userId = params.get('userId')
+    document.getElementById("publicChainBtn").setAttribute("href", "/publicChain?identity=" + identity + "&userId=" + userId);
+    document.getElementById("consortiumChainBtn").setAttribute("href", "/consortiumChain?identity=" + identity + "&userId=" + userId);
+    //document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
+
+    $.ajax({
+        type: "GET",
+        url: "/getBusinessProcessesByUserId",
+        data: {userId: userId, type: 'unclosed'},
+        success: function (respMsg) {
+            if (respMsg.code == 0) {
+                var length = 0
+                for (x in respMsg.data) {
+                    length = parseInt(x) + 1
+                }
+                document.getElementById("unclosedBPNum").innerHTML = length
+            } else {
+                alert(respMsg.data)
+            }
+        }
+    });
+    $.ajax({
+        type: "GET",
+        url: "/getBusinessProcessesByUserId",
+        data: {userId: userId, type: 'closed'},
+        success: function (respMsg) {
+            console.log(respMsg.data.size)
+            if (respMsg.code == 0) {
+                var length = 0
+                for (x in respMsg.data) {
+                    length = parseInt(x) + 1
+                }
+                document.getElementById("closedBPNum").innerHTML = length
+            } else {
+                alert(respMsg.data)
+            }
+        }
+    });
+    $.ajax({
+        type: "GET",
+        url: "/getWaitingCooperationRequest",
+        data: {userId: userId},
+        success: function (respMsg) {
+            console.log(respMsg.data.size)
+            if (respMsg.code == 0) {
+                var length = 0
+                for (x in respMsg.data) {
+                    length = parseInt(x) + 1
+                }
+                document.getElementById("requestNum").innerHTML = length
+            } else {
+                alert(respMsg.data)
+            }
+        }
+    });
+
+
+    function tableChange(type) {
+        $.ajax({
+            type: "GET",
+            url: "/getBusinessProcessesPreByUserId",
+            data: {userId: userId, type: type},
+            success: function (respMsg) {
+                if (respMsg.code == 0) {
+                    $('#mytab').bootstrapTable('load', respMsg.data)
+                } else {
+                    alert(respMsg.data)
+                }
+            }
+        });
+        /* console.log(type)
+         $('#mytab').bootstrapTable('refresh');*/
+    }
+
+    $('#mytab').bootstrapTable({
+        url: '/getBusinessProcessesPreByUserId',
+        queryParams: {userId: userId, type: 'all'},
+        toolbar: "#toolbar",
+        sidePagination: "true",
+        striped: true, // 是否显示行间隔色
+        //search : "true",
+        uniqueId: "ID",
+        pageSize: "5",
+        pagination: true, // 是否分页
+        sortable: true, // 是否启用排序
+        columns: [{
+            field: 'bpId',
+            title: '业务流程ID'
+        },
+            {
+                field: 'users',
+                title: '参与者'
+            },
+            {
+                field: 'createTime',
+                title: '开始时间'
+            },
+            {
+                field: 'completeTime',
+                title: '结束时间'
+            },
+            {
+                field: 'ops',
+                title: '操作',
+                width: 120,
+                align: 'center',
+                valign: 'middle',
+                formatter: actionFormatter,
+            },
+
+        ]
+    });
+
+    //操作栏的格式化
+    function actionFormatter(value, row, index) {
+        var bpId = row.bpId;
+        var state = row.state  //waiting or other
+        var result = "";
+        result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"findBPDetail('" + bpId + "', view='view')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+        if (state == "waiting")
+            result += "<a href='javascript:;' class='btn btn-xs blue' onclick=\"processBP('" + bpId + "')\" title='处理'><span class='glyphicon glyphicon-pencil'></span></a>";
+        return result;
+    }
+
+    function findBPDetail(bpId) {
+        window.location.href = "/bpDetail?" + "userId=" + userId + "&identity=" + identity + "&bpId=" + bpId
+    }
+
+    function processBP(bpId) {
+        window.location.href = "/bpDetailAndProcess?" + "userId=" + userId + "&identity=" + identity + "&bpId=" + bpId
+    }
+
+    function getCoopRequest() {
+        window.location.href = "/coopRequestPage?" + "userId=" + userId + "&identity=" + identity
+    }
+
+</script>
+
+</body>
+
+</html>

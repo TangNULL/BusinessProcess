@@ -5,9 +5,9 @@
 <mapper namespace="com.example.demo.mapper.BusinessMapper">
 
     <insert id="insertBPDescription" useGeneratedKeys="true" keyProperty="bpId">
-         insert into bpDescription ()
+         insert into bpDescription (createTime)
     values
-    ()
+    (now())
     </insert>
 
 
@@ -15,19 +15,13 @@
          insert into bpcontract (
     bpSenderId,
     bpReceiverId,
-    createTime,
     bpDescription,
-    isReceiverAccepted,
-    isSenderAck,
-    isReceiverAck)
+    isReceiverAccepted)
     values
     ( #{bpSenderId},
     #{bpReceiverId},
-    now(),
     #{bpDescription},
-    null,
-    false,
-    false)
+    null)
     </insert>
 
 

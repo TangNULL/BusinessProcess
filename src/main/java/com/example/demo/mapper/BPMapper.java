@@ -23,6 +23,8 @@ public interface BPMapper {
 
     void updateBPContract(BPContract bpContract);
 
+    void updateBP(BusinessProcess businessProcess);
+
     void updateTransaction(Transaction transaction);
 
     List<Integer> findAllBPIdsByUserId(int userId);   //有重复！！！！！！
