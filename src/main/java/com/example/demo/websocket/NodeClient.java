@@ -1,14 +1,23 @@
 package com.example.demo.websocket;
 
+import com.example.demo.entity.LocalPublicBlockchain;
 import com.example.demo.serviceImpl.WebSocketServiceImpl;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@Component
 public class NodeClient {
-//    WebSocketServiceImpl webSocketServiceImpl;
+
+    @Autowired
+    WebSocketServiceImpl webSocketServiceImpl;
+
+    @Autowired
+    LocalPublicBlockchain localBlockChain;
 
     public void init(String serverAddr) {
         try {
@@ -18,10 +27,10 @@ public class NodeClient {
                  */
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-//                    //客户端发送请求，查询最新区块
-//                    webSocketServiceImpl.write(this, webSocketServiceImpl.queryLatestBlockMsg());
-//                    webSocketServiceImpl.getSockets().add(this);
-                    System.out.println("connection open");
+                    //客户端发送请求，查询最新区块
+                    webSocketServiceImpl.write(this, webSocketServiceImpl.queryLatestBlockMsg());
+                    localBlockChain.getSockets().add(this);
+                    System.out.println("向邻居节点查询最新区块");
                 }
 
                 /**
@@ -29,8 +38,8 @@ public class NodeClient {
                  */
                 @Override
                 public void onClose(int i, String msg, boolean b) {
-//                    webSocketServiceImpl.getSockets().remove(this);
-                    System.out.println("connection closed");
+                    localBlockChain.getSockets().remove(this);
+                    System.out.println("关闭和邻居节点的连接");
                 }
 
                 /**
@@ -39,7 +48,7 @@ public class NodeClient {
                  */
                 @Override
                 public void onMessage(String msg) {
-//                    webSocketServiceImpl.handleMessage(this, msg, webSocketServiceImpl.getSockets());
+                    webSocketServiceImpl.handleMessage(this, msg, localBlockChain.getSockets());
                 }
 
                 /**
@@ -47,13 +56,13 @@ public class NodeClient {
                  */
                 @Override
                 public void onError(Exception e) {
-//                    webSocketServiceImpl.getSockets().remove(this);
-                    System.out.println("Client Error! Connection failed");
+                    localBlockChain.getSockets().remove(this);
+                    System.out.println("服务器连接失败！");
                 }
             };
             socketClient.connect();
         } catch (URISyntaxException e) {
-            System.out.println("p2p connect is error:" + e.getMessage());
+            System.out.println("连接错误: " + e.getMessage());
         }
     }
 }

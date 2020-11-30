@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Block;
-import com.example.demo.entity.LocalBlockChain;
 
+/**
+ * 区块链共识算法
+ */
 public interface ConsensusService {
-    Block PoWMine(LocalBlockChain blockChain);  //pow机制
-    boolean isValidHash(String hash, String target);  //验证区块的合法性
+    Block PoWMine();  //pow机制
+    Block PoSMine();  //pos机制
+    boolean isValidHash(String hash, int difficulty);  //验证区块的合法性
 }

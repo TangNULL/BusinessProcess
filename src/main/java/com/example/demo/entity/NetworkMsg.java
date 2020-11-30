@@ -3,7 +3,7 @@ package com.example.demo.entity;
 /**
  * 网络层传递的消息
  */
-public class NetworkMessage {
+public class NetworkMsg {
 
     private static final long serialVersionUID = 1L;
     //消息类型
@@ -11,14 +11,14 @@ public class NetworkMessage {
     //消息内容
     private String data;
 
-    public NetworkMessage() {
+    public NetworkMsg() {
     }
 
-    public NetworkMessage(int type) {
+    public NetworkMsg(int type) {
         this.type = type;
     }
 
-    public NetworkMessage(int type, String data) {
+    public NetworkMsg(int type, String data) {
         this.type = type;
         this.data = data;
     }
