@@ -1,11 +1,12 @@
 package com.example.demo.serviceImpl;
 
-import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.Block;
-import com.example.demo.entity.BlockChain;
+import com.example.demo.entity.LocalPublicBlockchain;
+import com.example.demo.entity.Transaction;
 import com.example.demo.entity.User;
 import com.example.demo.service.ConsensusService;
 import com.example.demo.utils.CryptoUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,14 +15,22 @@ import java.util.List;
 @Service
 public class ConsensusServiceImpl implements ConsensusService {
 
+    @Autowired
+    LocalPublicBlockchain blockChain;
+
     @Override
-    public Block PoWMine(BlockChain blockChain) {
+    public Block PoWMine() {
         Block newBlock = new Block();
         Block preBlock = blockChain.getLatestBlock();
         // 新区块属性
-        newBlock.setBlockId(blockChain.getBlockChain().size() + 1);
+        newBlock.setBlockId(preBlock.getBlockId() + 1);
         newBlock.setTimestamp(System.currentTimeMillis());
         newBlock.setPreHash(preBlock.getHash());
+
+        // 需要从交易池提取获得的数据
+        for (Transaction tx: blockChain.getTxCache()) {
+
+        }
 
         List<User> userList2 = new ArrayList<User>();
         userList2.add(new User("u3", "123456", "u1", "des", "core", "ass"));
@@ -29,7 +38,7 @@ public class ConsensusServiceImpl implements ConsensusService {
         newBlock.setUsers(userList2);
 
         //挖矿难度
-        newBlock.setTarget("0000");
+        newBlock.setDifficulty(changeDifficulty(preBlock.getDifficulty()));
 
         //工作量证明，计算正确hash值的次数
         int nonce = 0;
@@ -40,7 +49,7 @@ public class ConsensusServiceImpl implements ConsensusService {
             newBlock.setNonce(nonce);
             newBlock.setHash(CryptoUtil.calcBlockHash(newBlock));
             // 校验hash值
-            if (isValidHash(newBlock.getHash(), newBlock.getTarget())) {
+            if (isValidHash(newBlock.getHash(), newBlock.getDifficulty())) {
                 System.out.println("挖矿完成，正确的hash值：" + newBlock.getHash());
                 System.out.println("挖矿耗费时间：" + (System.currentTimeMillis() - start) + "ms");
                 break;
@@ -48,23 +57,43 @@ public class ConsensusServiceImpl implements ConsensusService {
             System.out.println("第"+(nonce+1)+"次尝试计算的hash值：" + newBlock.getHash());
             nonce++;
 
-            //如果更新了区块链，则放弃挖矿
+            //如果本地区块链接收到了新的区块，更新交易池，开始新的挖矿
         }
-
         return newBlock;
     }
 
-    /**
-     * 验证是否挖到新的区块,暂时这样写，后续修改
-     *
-     * @param hash
-     * @param target
-     * @return
-     */
-
     @Override
-    public boolean isValidHash(String hash, String target) {
-        return hash.startsWith("0000");
+    public Block PoSMine() {
+        Block newBlock = new Block();
+        return newBlock;
     }
 
+    @Override
+    public boolean isValidHash(String hash, int difficulty) {
+        String prefix = repeat("0", difficulty);
+        return hash.startsWith(prefix);
+    }
+
+    /**
+     * 同一个字符串重复多次
+     * @param str
+     * @param repeat
+     * @return
+     */
+    private static String repeat(String str, int repeat) {
+        final StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < repeat; i++) {
+            buf.append(str);
+        }
+        return buf.toString();
+    }
+
+    /**
+     * 改变区块链生成难度，暂时是固定的不改变
+     * @param curDifficulty
+     * @return
+     */
+    private int changeDifficulty(int curDifficulty) {
+        return curDifficulty;
+    }
 }

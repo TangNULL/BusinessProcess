@@ -5,15 +5,26 @@ import java.io.Serializable;
 /**
  * 轻节点上的区块，只包含区块头信息
  */
-public class lightBlock implements Serializable {
+public class LightBlock implements Serializable {
     private static final long serialVersionUID = 1L;
     private int blockId;  //区块高度
     private long timestamp;  //生成当前区块时间戳
-    private String target;  //区块生成的难度值
+    private int difficulty;  //区块生成的难度值
     private int nonce;  //计算随机数
     private String preHash;  //前一个区块hash值
     private String hash;  //当前区块hash值
 
+    public LightBlock() {
+    }
+
+    public LightBlock(int blockId, long timestamp, int difficulty, int nonce, String preHash, String hash) {
+        this.blockId = blockId;
+        this.timestamp = timestamp;
+        this.difficulty = difficulty;
+        this.nonce = nonce;
+        this.preHash = preHash;
+        this.hash = hash;
+    }
 
     public int getBlockId() {
         return blockId;
@@ -31,12 +42,12 @@ public class lightBlock implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public String getTarget() {
-        return target;
+    public int getDifficulty() {
+        return difficulty;
     }
 
-    public void setTarget(String target) {
-        this.target = target;
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
 
     public int getNonce() { return nonce; }
