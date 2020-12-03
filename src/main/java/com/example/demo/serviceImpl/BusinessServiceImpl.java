@@ -5,6 +5,7 @@ import com.example.demo.entity.BusinessProcess;
 import com.example.demo.entity.Transaction;
 import com.example.demo.mapper.BPMapper;
 import com.example.demo.mapper.BusinessMapper;
+import com.example.demo.service.ConsortiumBlockchainService;
 import com.example.demo.service.BusinessService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,6 +25,9 @@ public class BusinessServiceImpl implements BusinessService {
     @Autowired
     BPMapper bpMapper;
 
+    @Autowired
+    ConsortiumBlockchainService consortiumBlockchainService;
+
     @Override
     public void creatCooperate(Integer senderId, Integer receiverId, Integer bpId, String BPDescription, List<Transaction> transactions) {
         int businessProcesssId;
@@ -34,11 +38,17 @@ public class BusinessServiceImpl implements BusinessService {
         } else {
             businessProcesssId = bpId;
         }
-        BPContract bpContract = new BPContract(senderId, receiverId, BPDescription);
-        businessMapper.insertContract(bpContract);
-        businessMapper.insertBusinessProcess(businessProcesssId, bpContract.getContractId());
-        businessMapper.batchInsertTransactions(transactions);
-        businessMapper.batchInsertCooperation(bpContract.getContractId(), transactions);
+
+        //协作业务流程发起者申请联盟链
+        if(consortiumBlockchainService.downloadPhase(businessProcesssId, senderId, receiverId, BPDescription)){
+            BPContract bpContract = new BPContract(senderId, receiverId, BPDescription);
+            businessMapper.insertContract(bpContract);
+            businessMapper.insertBusinessProcess(businessProcesssId, bpContract.getContractId());
+            businessMapper.batchInsertTransactions(transactions);
+            businessMapper.batchInsertCooperation(bpContract.getContractId(), transactions);
+        } else {
+            System.out.println("该用户不存在，请先实名注册！");
+        }
     }
 
     /*@Override
@@ -97,6 +107,12 @@ public class BusinessServiceImpl implements BusinessService {
             if (userIdlist.size() == businessProcess.getUserList().size()) {
                 Timestamp comTime = new Timestamp(System.currentTimeMillis());
                 businessProcess.setCompleteTime(comTime);
+                //TODO
+                if(consortiumBlockchainService.uploadPhase()){
+                    
+                }
+
+
             }
             businessProcess.setAckUsers(gson.toJson(userIdlist));
             bpMapper.updateBP(businessProcess);

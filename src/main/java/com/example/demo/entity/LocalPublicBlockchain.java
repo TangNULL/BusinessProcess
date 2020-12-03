@@ -15,6 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class LocalPublicBlockchain {
     private List<Block> blockChain = new ArrayList<>();  //本地节点上保存的区块信息
     private List<Transaction> txCache = new ArrayList<>();  //本地节点上接收到的交易池信息
+    private List<User> users = new ArrayList<>();  //本地节点上保存的用户全局状态
     private List<WebSocket> sockets = new ArrayList<>();  //本地节点上的邻居节点
     private String address;  //本机ip地址
     private int port;  //本地端口号
@@ -36,14 +37,20 @@ public class LocalPublicBlockchain {
         this.txCache = txCache;
     }
 
-    public Block getLatestBlock() { return blockChain.size() > 0 ? blockChain.get(blockChain.size() - 1) : null; }
-
     public List<WebSocket> getSockets() {
         return sockets;
     }
 
     public void setSockets(List<WebSocket> sockets) {
         this.sockets = sockets;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public String getAddress() {
@@ -61,6 +68,8 @@ public class LocalPublicBlockchain {
     public void setPort(int port) {
         this.port = port;
     }
+
+    public Block getLatestBlock() { return blockChain.size() > 0 ? blockChain.get(blockChain.size() - 1) : null; }
 
 
 }

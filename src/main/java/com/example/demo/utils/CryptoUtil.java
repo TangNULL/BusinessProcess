@@ -60,7 +60,7 @@ public class CryptoUtil {
      */
     public static String calcBlockHash(Block curBlock) {
         String preHash = curBlock.getPreHash();
-        String strUser = JSON.toJSONString(curBlock.getUsers());
+        String strUser = JSON.toJSONString(curBlock.getUsersState());
         String strTx = JSON.toJSONString(curBlock.getTxs());
         String nonce = String.valueOf(curBlock.getNonce());
         return CryptoUtil.SHA256(preHash + strUser + strTx + nonce);

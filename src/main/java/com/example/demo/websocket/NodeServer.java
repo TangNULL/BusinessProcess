@@ -1,7 +1,9 @@
 package com.example.demo.websocket;
 
 import com.example.demo.entity.LocalPublicBlockchain;
-import com.example.demo.serviceImpl.WebSocketServiceImpl;
+import com.example.demo.service.PublicBlockchainService;
+import com.example.demo.service.WebSocketService;
+import com.example.demo.serviceImpl.PublicBlockchainServiceImpl;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -12,11 +14,13 @@ import java.net.InetSocketAddress;
 
 @Component
 public class NodeServer {
-    @Autowired
-    WebSocketServiceImpl webSocketServiceImpl;
 
     @Autowired
     LocalPublicBlockchain localBlockChain;
+
+    @Autowired
+    WebSocketService webSocketService;
+
 
     public void init(int port) {
         WebSocketServer socketServer = new WebSocketServer(new InetSocketAddress(port)) {
@@ -45,7 +49,7 @@ public class NodeServer {
             @Override
             public void onMessage(WebSocket webSocket, String msg) {
                 //作为服务端，业务逻辑处理
-                webSocketServiceImpl.handleMessage(webSocket, msg, localBlockChain.getSockets());
+                webSocketService.handleMessage(webSocket, msg, localBlockChain.getSockets());
             }
 
             /**

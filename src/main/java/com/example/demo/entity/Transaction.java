@@ -17,6 +17,14 @@ public class Transaction {
     private Boolean isReceiverAck;  // 接收方确认完成transaction
     private String consultation;  //协商历史
 
+    // 方便测试的构造方法，实际使用不到
+    public Transaction(Integer transId, Integer senderId, Integer receiverId, String tranDescription) {
+        this.transId = transId;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.tranDescription = tranDescription;
+    }
+
     public Transaction(Transaction t) {
         this.transId = t.getTransId();
         this.hash = t.getHash();

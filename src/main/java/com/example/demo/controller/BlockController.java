@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.LocalPublicBlockchain;
-import com.example.demo.service.BPRecordService;
+import com.example.demo.service.ConsortiumBlockchainService;
 import com.example.demo.service.BlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class BlockController {
     LocalPublicBlockchain localBlockChain;
 
     @Autowired
-    BPRecordService bpRecordService;
+    ConsortiumBlockchainService consortiumBlockchainService;
 
     /**
      * 查看当前节点区块链数据
@@ -47,15 +47,16 @@ public class BlockController {
         return blockService.createNewBlock();
     }
 
-    /**
-     * 联盟链生成
-     *
-     */
-    @GetMapping("/download")
-    @ResponseBody
-    public String downloadData() {
-        return blockService.createNewBlock();
-    }
+//    /**
+//     * 联盟链生成
+//     *
+//     */
+//    @GetMapping("/download")
+//    @ResponseBody
+//    public String downloadData() {
+//        consortiumBlockchainService.downloadPhase();
+//        return blockService.createNewBlock();
+//    }
 
     /**
      * 联盟链上传数据
@@ -64,7 +65,7 @@ public class BlockController {
     @GetMapping("/upload")
     @ResponseBody
     public String uploadData() {
-        bpRecordService.uploadPhase();
+        consortiumBlockchainService.uploadPhase();
         return JSON.toJSONString(localBlockChain.getTxCache());
     }
 }

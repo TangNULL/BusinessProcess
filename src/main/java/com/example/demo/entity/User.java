@@ -9,6 +9,10 @@ public class User {
     private String coreBusiness; //核心业务
     private String assessment;  //资产评估
 
+    public User(Integer userid) {
+        this.userid = userid;
+    }
+
     public User(Integer userid, String username, String password, String identity, String description, String coreBusiness, String assessment) {
         this.userid = userid;
         this.username = username;

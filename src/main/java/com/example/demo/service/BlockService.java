@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Block;
 import com.example.demo.entity.Transaction;
+import org.java_websocket.WebSocket;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface BlockService {
 
     void addTxCache(List<Transaction> txs);  //添加交易缓存
     void removeTxCache(List<Transaction> txs); //更新当前节点的交易池记录
+
+//    boolean handleMessage(String msg);  //联盟链和公有链消息通信处理
 }

@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.*;
 import com.example.demo.service.BlockService;
 import com.example.demo.service.ConsensusService;
+import com.example.demo.service.PublicBlockchainService;
 import com.example.demo.service.WebSocketService;
-import com.example.demo.utils.BlockUtil;
+import com.example.demo.utils.BlockchainUtil;
 import com.example.demo.utils.CryptoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,14 @@ public class BlockServiceImpl implements BlockService {
     ConsensusService consensusService;
 
     @Autowired
+    PublicBlockchainService publicBlockchainService;
+
+    @Autowired
+    LocalPublicBlockchain localPublicBlockchain;
+
+    @Autowired
     WebSocketService webSocketService;
+
 
     @Override
     public String createGenesisBlock() {
@@ -35,10 +43,12 @@ public class BlockServiceImpl implements BlockService {
             genesisBlock.setPreHash("");
             genesisBlock.setDifficulty(4);
 
-            List<User> userList = new ArrayList<User>();
-            userList.add(new User("u1", "123456", "u1", "des", "core", "ass"));
-            userList.add(new User("u2", "123456", "u1", "des", "core", "ass"));
-            genesisBlock.setUsers(userList);
+            //设置用户状态
+            String localUserState = "";
+            for (User user : localPublicBlockchain.getUsers()) {
+                localUserState = localUserState + user.getUserid();
+            }
+            genesisBlock.setUsersState(CryptoUtil.SHA256(localUserState));
             genesisBlock.setHash(CryptoUtil.calcBlockHash(genesisBlock));
             //添加到区块链中
             blockChain.getBlockChain().add(genesisBlock);
@@ -67,17 +77,17 @@ public class BlockServiceImpl implements BlockService {
     private void createBlockBroadcast(Block block) {
         //创建成功后，全网广播出去
         NetworkMsg networkMsg = new NetworkMsg();
-        networkMsg.setType(BlockUtil.RESPONSE_LATEST_BLOCK);
+        networkMsg.setType(BlockchainUtil.RESPONSE_LATEST_BLOCK);
         networkMsg.setData(JSON.toJSONString(block));
-        webSocketService.broadcast(JSON.toJSONString(networkMsg));
+        webSocketService.broadcast(JSON.toJSONString(networkMsg), localPublicBlockchain.getSockets());
     }
-
 
     @Override
     public boolean addBlock(Block newBlock) {
         //先对新区块的合法性进行校验
         if (isValidBlock(blockChain.getLatestBlock(), newBlock)) {
             blockChain.getBlockChain().add(newBlock);
+            removeTxCache(newBlock.getTxs());
             return true;
         }
         return false;
@@ -129,4 +139,26 @@ public class BlockServiceImpl implements BlockService {
     public void removeTxCache(List<Transaction> txs){
         blockChain.getTxCache().removeAll(txs);
     }
+
+//    @Override
+//    public boolean handleMessage(String msg) {
+//        IResponse iResponse = JSON.parseObject(msg, IResponse.class);
+//
+//        switch (iResponse.getCode()) {
+//            //本地申请联盟链
+//            case ConsortiumBlockchainUtil.APPLY_FOR_CONSORTIUM_CHAIN:
+//                System.out.println("接收到用户" + localPublicBlockchain.getAddress() + "申请联盟链请求 ");
+//                if (isUserExist((Integer) iResponse.getData())) {
+//
+//                }
+//                break;
+//            //
+//            case ConsortiumBlockchainUtil.APPLY_FOR_COOPERATION:
+//                break;
+//            //
+//            case ConsortiumBlockchainUtil.CONFIRM_FOR_COOPERATION:
+//                break;
+//        }
+//    }
+
 }

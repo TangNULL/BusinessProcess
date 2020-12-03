@@ -16,26 +16,31 @@ import java.util.List;
 public class ConsensusServiceImpl implements ConsensusService {
 
     @Autowired
-    LocalPublicBlockchain blockChain;
+    LocalPublicBlockchain localPublicBlockchain;
 
     @Override
     public Block PoWMine() {
         Block newBlock = new Block();
-        Block preBlock = blockChain.getLatestBlock();
+        Block preBlock = localPublicBlockchain.getLatestBlock();
         // 新区块属性
         newBlock.setBlockId(preBlock.getBlockId() + 1);
         newBlock.setTimestamp(System.currentTimeMillis());
         newBlock.setPreHash(preBlock.getHash());
 
         // 需要从交易池提取获得的数据
-        for (Transaction tx: blockChain.getTxCache()) {
+        List<Transaction> txs = new ArrayList<>();
+        for (Transaction tx : localPublicBlockchain.getTxCache()) {
+            txs.add(tx);
+        }
+        newBlock.setTxs(txs);
 
+        //设置用户状态
+        String localUserState = "";
+        for (User user : localPublicBlockchain.getUsers()) {
+            localUserState = localUserState + user.getUserid();
         }
 
-        List<User> userList2 = new ArrayList<User>();
-        userList2.add(new User("u3", "123456", "u1", "des", "core", "ass"));
-        userList2.add(new User("u4", "123456", "u1", "des", "core", "ass"));
-        newBlock.setUsers(userList2);
+        newBlock.setUsersState(CryptoUtil.SHA256(localUserState));
 
         //挖矿难度
         newBlock.setDifficulty(changeDifficulty(preBlock.getDifficulty()));
