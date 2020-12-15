@@ -35,6 +35,15 @@ public class NetworkUtil {
             case 3:
                 return BlockchainUtil.SEED_NODE3;
         }
-        return "error";
+        return null;
+    }
+
+    /**
+     * 将传来的ip地址转化为用户id
+     * @param ipAddress
+     * @return
+     */
+    public static Integer getIdByAddress(String ipAddress) {
+        return 0;
     }
 }

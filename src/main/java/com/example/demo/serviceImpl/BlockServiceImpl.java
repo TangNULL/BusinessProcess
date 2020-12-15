@@ -17,9 +17,6 @@ import java.util.*;
 public class BlockServiceImpl implements BlockService {
 
     @Autowired
-    LocalPublicBlockchain blockChain;
-
-    @Autowired
     ConsensusService consensusService;
 
     @Autowired
@@ -34,8 +31,8 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public String createGenesisBlock() {
-        if (blockChain.getBlockChain().size() == 0) {
-            Block genesisBlock = new Block();
+        if (localPublicBlockchain.getBlockChain().size() == 0) {
+            PublicBlock genesisBlock = new PublicBlock();
             // 创世区块属性
             genesisBlock.setBlockId(1);
             genesisBlock.setTimestamp(System.currentTimeMillis());
@@ -44,25 +41,25 @@ public class BlockServiceImpl implements BlockService {
             genesisBlock.setDifficulty(4);
 
             //设置用户状态
-            String localUserState = "";
+            StringBuilder localUserState = new StringBuilder();
             for (User user : localPublicBlockchain.getUsers()) {
-                localUserState = localUserState + user.getUserid();
+                localUserState.append(user.getUserid());
             }
-            genesisBlock.setUsersState(CryptoUtil.SHA256(localUserState));
+            genesisBlock.setUsersState(CryptoUtil.SHA256(localUserState.toString()));
             genesisBlock.setHash(CryptoUtil.calcBlockHash(genesisBlock));
             //添加到区块链中
-            blockChain.getBlockChain().add(genesisBlock);
+            localPublicBlockchain.getBlockChain().add(genesisBlock);
             //通知其他节点
             createBlockBroadcast(genesisBlock);
 
             return JSON.toJSONString(genesisBlock);
         }
-        return JSON.toJSONString(blockChain.getBlockChain().get(0));
+        return JSON.toJSONString(localPublicBlockchain.getBlockChain().get(0));
     }
 
     @Override
     public String createNewBlock() {
-        Block newBlock = consensusService.PoWMine();
+        PublicBlock newBlock = consensusService.PoWMine();
 
         if (addBlock(newBlock)) {
             //通知其他节点
@@ -74,7 +71,7 @@ public class BlockServiceImpl implements BlockService {
         }
     }
 
-    private void createBlockBroadcast(Block block) {
+    private void createBlockBroadcast(PublicBlock block) {
         //创建成功后，全网广播出去
         NetworkMsg networkMsg = new NetworkMsg();
         networkMsg.setType(BlockchainUtil.RESPONSE_LATEST_BLOCK);
@@ -83,18 +80,18 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    public boolean addBlock(Block newBlock) {
+    public boolean addBlock(PublicBlock newBlock) {
         //先对新区块的合法性进行校验
-        if (isValidBlock(blockChain.getLatestBlock(), newBlock)) {
-            blockChain.getBlockChain().add(newBlock);
-            removeTxCache(newBlock.getTxs());
+        if (isValidBlock(localPublicBlockchain.getLatestBlock(), newBlock)) {
+            localPublicBlockchain.getBlockChain().add(newBlock);
+            localPublicBlockchain.removeTxCache(newBlock.getTxs());
             return true;
         }
         return false;
     }
 
     //验证是否为最新区块
-    private boolean isValidBlock(Block lastBlock, Block curBlock) {
+    private boolean isValidBlock(PublicBlock lastBlock, PublicBlock curBlock) {
         if(!lastBlock.getHash().equals(curBlock.getPreHash())){
             System.out.println("新区块的前一个区块哈希值不匹配");
             return false;
@@ -111,7 +108,7 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    public boolean isValidChain(List<Block> otherChain) {
+    public boolean isValidChain(List<PublicBlock> otherChain) {
         for(int i = 0; i < otherChain.size()-1; i++) {
             if (!isValidBlock(otherChain.get(i), otherChain.get(i+1))) {
                 return false;
@@ -121,44 +118,12 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    public void replaceChain(List<Block> otherChain) {
-        if (otherChain.size() > blockChain.getBlockChain().size() && isValidChain(otherChain)) {
-            blockChain.setBlockChain(otherChain);
-            blockChain.getTxCache().clear();
+    public void replaceChain(List<PublicBlock> otherChain) {
+        if (otherChain.size() > localPublicBlockchain.getBlockChain().size() && isValidChain(otherChain)) {
+            localPublicBlockchain.setBlockChain(otherChain);
+            localPublicBlockchain.getTxCache().clear();
         } else {
             System.out.println("接收的区块链无效");
         }
     }
-
-    @Override
-    public void addTxCache(List<Transaction> txs) {
-        blockChain.getTxCache().addAll(txs);
-    }
-
-    @Override
-    public void removeTxCache(List<Transaction> txs){
-        blockChain.getTxCache().removeAll(txs);
-    }
-
-//    @Override
-//    public boolean handleMessage(String msg) {
-//        IResponse iResponse = JSON.parseObject(msg, IResponse.class);
-//
-//        switch (iResponse.getCode()) {
-//            //本地申请联盟链
-//            case ConsortiumBlockchainUtil.APPLY_FOR_CONSORTIUM_CHAIN:
-//                System.out.println("接收到用户" + localPublicBlockchain.getAddress() + "申请联盟链请求 ");
-//                if (isUserExist((Integer) iResponse.getData())) {
-//
-//                }
-//                break;
-//            //
-//            case ConsortiumBlockchainUtil.APPLY_FOR_COOPERATION:
-//                break;
-//            //
-//            case ConsortiumBlockchainUtil.CONFIRM_FOR_COOPERATION:
-//                break;
-//        }
-//    }
-
 }

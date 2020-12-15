@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.*;
 import com.example.demo.service.UserManageService;
+import com.example.demo.service.WebSocketService;
+import com.example.demo.utils.NetworkUtil;
+import org.java_websocket.WebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +15,12 @@ public class UserController {
 
     @Autowired
     UserManageService userManageService;
+
+    @Autowired
+    LocalPublicBlockchain localPublicBlockchain;
+
+    @Autowired
+    WebSocketService webSocketService;
 
     @RequestMapping("/login")
     @ResponseBody
@@ -32,6 +41,12 @@ public class UserController {
         if (b) {
             User u = userManageService.getUserByIdentity(identity);
             response = new IResponse(0, u);
+
+//            //添加用户到区块链上
+//            u.setIpAddress(NetworkUtil.getLocalAddress());
+//            localPublicBlockchain.addUser(u);
+//            webSocketService.broadcast(msg, localPublicBlockchain.getSockets());
+
         } else
             response = new IResponse(1, "注册失败");
         return response;

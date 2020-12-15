@@ -26,6 +26,12 @@ public class BlockchainUtil {
     //接受邀请，加入联盟链
     public final static int CONFIRM_FOR_COOPERATION = 6;
 
+    //协作结束，申请数据上传
+    public final static int APPLY_FOR_UPLOAD = 7;
+
+    //确认数据可以上传
+    public final static int CONFIRM_FOR_UPLOAD = 8;
+
     //区块链种子节点
     public final static String SEED_NODE1 = "ws://172.19.187.200:7005";
     public final static String SEED_NODE2 = "ws://172.19.187.200:7006";

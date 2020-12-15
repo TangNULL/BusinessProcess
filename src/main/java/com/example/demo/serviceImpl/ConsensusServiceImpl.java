@@ -1,6 +1,6 @@
 package com.example.demo.serviceImpl;
 
-import com.example.demo.entity.Block;
+import com.example.demo.entity.PublicBlock;
 import com.example.demo.entity.LocalPublicBlockchain;
 import com.example.demo.entity.Transaction;
 import com.example.demo.entity.User;
@@ -19,28 +19,25 @@ public class ConsensusServiceImpl implements ConsensusService {
     LocalPublicBlockchain localPublicBlockchain;
 
     @Override
-    public Block PoWMine() {
-        Block newBlock = new Block();
-        Block preBlock = localPublicBlockchain.getLatestBlock();
+    public PublicBlock PoWMine() {
+        PublicBlock newBlock = new PublicBlock();
+        PublicBlock preBlock = localPublicBlockchain.getLatestBlock();
         // 新区块属性
         newBlock.setBlockId(preBlock.getBlockId() + 1);
         newBlock.setTimestamp(System.currentTimeMillis());
         newBlock.setPreHash(preBlock.getHash());
 
         // 需要从交易池提取获得的数据
-        List<Transaction> txs = new ArrayList<>();
-        for (Transaction tx : localPublicBlockchain.getTxCache()) {
-            txs.add(tx);
-        }
+        List<Transaction> txs = new ArrayList<>(localPublicBlockchain.getTxCache());
         newBlock.setTxs(txs);
 
         //设置用户状态
-        String localUserState = "";
+        StringBuilder localUserState = new StringBuilder();
         for (User user : localPublicBlockchain.getUsers()) {
-            localUserState = localUserState + user.getUserid();
+            localUserState.append(user.getUserid());
         }
 
-        newBlock.setUsersState(CryptoUtil.SHA256(localUserState));
+        newBlock.setUsersState(CryptoUtil.SHA256(localUserState.toString()));
 
         //挖矿难度
         newBlock.setDifficulty(changeDifficulty(preBlock.getDifficulty()));
@@ -68,8 +65,9 @@ public class ConsensusServiceImpl implements ConsensusService {
     }
 
     @Override
-    public Block PoSMine() {
-        Block newBlock = new Block();
+    public PublicBlock PoSMine() {
+        PublicBlock newBlock = new PublicBlock();
+        //TODO: 关于pos算法
         return newBlock;
     }
 
@@ -81,22 +79,18 @@ public class ConsensusServiceImpl implements ConsensusService {
 
     /**
      * 同一个字符串重复多次
-     * @param str
-     * @param repeat
-     * @return
+     * @param str 重复的字符串
+     * @param repeatTime 重复的次数
+     * @return 多次重复的同一个字符串
      */
-    private static String repeat(String str, int repeat) {
-        final StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < repeat; i++) {
-            buf.append(str);
-        }
-        return buf.toString();
+    private static String repeat(String str, int repeatTime) {
+        return String.valueOf(str).repeat(Math.max(0, repeatTime));
     }
 
     /**
      * 改变区块链生成难度，暂时是固定的不改变
-     * @param curDifficulty
-     * @return
+     * @param curDifficulty 区块难度
+     * @return 调整之后的区块难度
      */
     private int changeDifficulty(int curDifficulty) {
         return curDifficulty;

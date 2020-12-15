@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Block;
-import com.example.demo.entity.Transaction;
-import org.java_websocket.WebSocket;
+import com.example.demo.entity.PublicBlock;
 
 import java.util.List;
 
@@ -13,14 +11,12 @@ import java.util.List;
 public interface BlockService {
 
     String createGenesisBlock();  //创世区块
+
     String createNewBlock();  //挖掘节点生成新的区块
-    boolean addBlock(Block curBlock);  //添加新区块
 
-    boolean isValidChain(List<Block> blockchain);  //验证区块链的有效性
-    void replaceChain(List<Block> blockchain);  //替换本地区块链
+    boolean addBlock(PublicBlock curBlock);  //添加新区块
 
-    void addTxCache(List<Transaction> txs);  //添加交易缓存
-    void removeTxCache(List<Transaction> txs); //更新当前节点的交易池记录
+    boolean isValidChain(List<PublicBlock> blockchain);  //验证区块链的有效性
 
-//    boolean handleMessage(String msg);  //联盟链和公有链消息通信处理
+    void replaceChain(List<PublicBlock> blockchain);  //替换本地区块链
 }

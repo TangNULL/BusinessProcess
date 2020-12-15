@@ -2,7 +2,7 @@ package com.example.demo.serviceImpl;
 
 
 import com.alibaba.fastjson.JSON;
-import com.example.demo.entity.Block;
+import com.example.demo.entity.PublicBlock;
 import com.example.demo.entity.LocalPublicBlockchain;
 import com.example.demo.entity.NetworkMsg;
 import com.example.demo.service.BlockService;
@@ -15,8 +15,6 @@ import org.java_websocket.WebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -67,9 +65,9 @@ public class PublicBlockchainServiceImpl implements PublicBlockchainService {
     @Override
     public void handleBlockResponse(String blockData, List<WebSocket> sockets) {
         //反序列化得到其它节点的最新区块信息
-        Block receivedLatestBlock = JSON.parseObject(blockData, Block.class);
+        PublicBlock receivedLatestBlock = JSON.parseObject(blockData, PublicBlock.class);
         //当前节点的最新区块
-        Block localLatestBlock = localPublicBlockchain.getLatestBlock();
+        PublicBlock localLatestBlock = localPublicBlockchain.getLatestBlock();
 
         if (receivedLatestBlock != null) {
             if(localLatestBlock != null) {
@@ -89,26 +87,26 @@ public class PublicBlockchainServiceImpl implements PublicBlockchainService {
 
     @Override
     public void handleBlockChainResponse(String blockData, List<WebSocket> sockets) {
-    //反序列化得到其它节点的整条区块链信息
-        List<Block> receivedBlockchain = JSON.parseArray(blockData, Block.class);
+        //反序列化得到其它节点的整条区块链信息
+        List<PublicBlock> receivedBlockchain = JSON.parseArray(blockData, PublicBlock.class);
         if(!CollectionUtils.isEmpty(receivedBlockchain) && blockService.isValidChain(receivedBlockchain)) {
             //根据区块索引先对区块进行排序
-            Collections.sort(receivedBlockchain, new Comparator<Block>() {
-                public int compare(Block block1, Block block2) {
+            receivedBlockchain.sort(new Comparator<PublicBlock>() {
+                public int compare(PublicBlock block1, PublicBlock block2) {
                     return block1.getBlockId() - block2.getBlockId();
                 }
             });
 
             //其它节点的最新区块
-            Block latestBlockReceived = receivedBlockchain.get(receivedBlockchain.size()-1);
+            PublicBlock latestBlockReceived = receivedBlockchain.get(receivedBlockchain.size()-1);
             //当前节点的最新区块
-            Block latestBlock = localPublicBlockchain.getLatestBlock();
+            PublicBlock latestBlock = localPublicBlockchain.getLatestBlock();
 
             if(latestBlock == null) {
                 //替换本地的区块链
                 blockService.replaceChain(receivedBlockchain);
             }else {
-                //其它节点区块链如果比当前节点的长，则处理当前节点的区块链
+                //如果只领先本地一个区块，则更新最新区块
                 if (latestBlockReceived.getBlockId() > latestBlock.getBlockId()) {
                     if (latestBlock.getHash().equals(latestBlockReceived.getPreHash())) {
                         if (blockService.addBlock(latestBlockReceived)) {

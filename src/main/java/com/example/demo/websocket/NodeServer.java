@@ -50,6 +50,16 @@ public class NodeServer {
             public void onMessage(WebSocket webSocket, String msg) {
                 //作为服务端，业务逻辑处理
                 webSocketService.handleMessage(webSocket, msg, localBlockChain.getSockets());
+//                System.out.println("连接的websocket数量: " + localBlockChain.getSockets().size());
+//                for (WebSocket ws : localBlockChain.getSockets()) {
+//                    System.out.println("远程地址为: " + ws.getRemoteSocketAddress().getHostString());
+//                }
+//                for (WebSocket ws : localBlockChain.getSockets()) {
+//                    System.out.println("本地地址为: " + ws.getLocalSocketAddress().getHostString());
+//                }
+//                for (WebSocket ws : localBlockChain.getSockets()) {
+//                    System.out.println("websocket为: " + ws.toString());
+//                }
             }
 
             /**
@@ -67,6 +77,7 @@ public class NodeServer {
             }
 
         };
+        System.out.println("连接的websocket数量: " + localBlockChain.getSockets().size());
         socketServer.start();
         System.out.println("监听端口: " + port);
     }

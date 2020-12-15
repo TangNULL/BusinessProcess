@@ -1,7 +1,7 @@
 package com.example.demo.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.example.demo.entity.Block;
+import com.example.demo.entity.PublicBlock;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -58,7 +58,7 @@ public class CryptoUtil {
      * @param curBlock
      * @return 当前区块的哈希值
      */
-    public static String calcBlockHash(Block curBlock) {
+    public static String calcBlockHash(PublicBlock curBlock) {
         String preHash = curBlock.getPreHash();
         String strUser = JSON.toJSONString(curBlock.getUsersState());
         String strTx = JSON.toJSONString(curBlock.getTxs());
