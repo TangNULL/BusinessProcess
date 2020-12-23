@@ -8,6 +8,15 @@ public class User {
     private String description;  //企业简述
     private String coreBusiness; //核心业务
     private String assessment;  //资产评估
+    private String ipAddress;
+
+    public User(Integer userid) {
+        this.userid = userid;
+    }
+    public User(Integer userid, String ipAddress) {
+        this.userid = userid;
+        this.ipAddress = ipAddress;
+    }
 
     public User(Integer userid, String username, String password, String identity, String description, String coreBusiness, String assessment) {
         this.userid = userid;
@@ -82,5 +91,13 @@ public class User {
 
     public void setAssessment(String assessment) {
         this.assessment = assessment;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 }

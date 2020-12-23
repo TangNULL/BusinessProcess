@@ -4,6 +4,10 @@ public class IResponse<T> {
     int code;
     T data;
 
+    public IResponse(int code) {
+        this.code = code;
+    }
+
     public IResponse(int code, T data) {
         this.code = code;
         this.data = data;

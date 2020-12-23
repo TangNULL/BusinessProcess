@@ -1,12 +1,14 @@
 package com.example.demo.entity;
 
 
+import com.example.demo.utils.CooperationUtil;
 import com.example.demo.utils.CryptoUtil;
 
 import java.sql.Timestamp;
 
 public class Transaction {
-    private Integer transId;  //
+    private Integer bpId;  //流程实例id
+    private Integer transId;  //当前tx的标识id
     private String hash;  //由发起方+接收方+时间戳+交易内容+协商历史计算出的hash
     private Integer senderId;  //交易发起方     user 还是  userID就够了？？？？？
     private Integer receiverId;  //交易接收方   user 还是  userID就够了？？？？？
@@ -16,6 +18,18 @@ public class Transaction {
     private Boolean isSenderAck;  // 发起方确认完成transaction
     private Boolean isReceiverAck;  // 接收方确认完成transaction
     private String consultation;  //协商历史
+    private Integer transState;  //协作所处的状态
+    private String preHash;
+    private String nextHash;
+
+    // 方便测试的构造方法，实际使用不到
+    public Transaction(Integer bpId, Integer senderId, Integer receiverId, String tranDescription) {
+        this.bpId = bpId;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.tranDescription = tranDescription;
+        this.transState = CooperationUtil.APPLY_STATE;
+    }
 
     public Transaction(Transaction t) {
         this.transId = t.getTransId();
@@ -50,6 +64,14 @@ public class Transaction {
     }
 
     public Transaction() {
+    }
+
+    public Integer getBpId() {
+        return bpId;
+    }
+
+    public void setBpId(Integer bpId) {
+        this.bpId = bpId;
     }
 
     public Integer getTransId() {
@@ -134,5 +156,44 @@ public class Transaction {
 
     public void setConsultation(String consultation) {
         this.consultation = consultation;
+    }
+
+    public Integer getTransState() {
+        return transState;
+    }
+
+    public void setTransState(Integer transState) {
+        this.transState = transState;
+    }
+
+    public String getPreHash() {
+        return preHash;
+    }
+
+    public void setPreHash(String preHash) {
+        this.preHash = preHash;
+    }
+
+    public String getNextHash() {
+        return nextHash;
+    }
+
+    public void setNextHash(String nextHash) {
+        this.nextHash = nextHash;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "bpId=" + bpId +
+                ", transId=" + transId +
+                ", senderId=" + senderId +
+                ", receiverId=" + receiverId +
+                ", createTime=" + createTime +
+                ", completeTime=" + completeTime +
+                ", tranDescription='" + tranDescription + '\'' +
+                ", transState=" + transState +
+                ", preHash='" + preHash + '\'' +
+                '}';
     }
 }
