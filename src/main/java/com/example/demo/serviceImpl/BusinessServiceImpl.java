@@ -39,8 +39,11 @@ public class BusinessServiceImpl implements BusinessService {
             businessProcesssId = bpId;
         }
 
+        for (Transaction t : transactions) {
+            t.setBpId(businessProcesssId);
+        }
         //协作业务流程发起者申请联盟链
-        if(consortiumBlockchainService.downloadPhase(businessProcesssId, senderId, receiverId, BPDescription)){
+        if (consortiumBlockchainService.downloadPhase(businessProcesssId, senderId, receiverId, BPDescription)) {
             BPContract bpContract = new BPContract(senderId, receiverId, BPDescription);
             businessMapper.insertContract(bpContract);
             businessMapper.insertBusinessProcess(businessProcesssId, bpContract.getContractId());
