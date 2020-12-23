@@ -19,6 +19,8 @@ public class Transaction {
     private Boolean isReceiverAck;  // 接收方确认完成transaction
     private String consultation;  //协商历史
     private Integer transState;  //协作所处的状态
+    private String preHash;
+    private String nextHash;
 
     // 方便测试的构造方法，实际使用不到
     public Transaction(Integer bpId, Integer senderId, Integer receiverId, String tranDescription) {
@@ -162,5 +164,36 @@ public class Transaction {
 
     public void setTransState(Integer transState) {
         this.transState = transState;
+    }
+
+    public String getPreHash() {
+        return preHash;
+    }
+
+    public void setPreHash(String preHash) {
+        this.preHash = preHash;
+    }
+
+    public String getNextHash() {
+        return nextHash;
+    }
+
+    public void setNextHash(String nextHash) {
+        this.nextHash = nextHash;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "bpId=" + bpId +
+                ", transId=" + transId +
+                ", senderId=" + senderId +
+                ", receiverId=" + receiverId +
+                ", createTime=" + createTime +
+                ", completeTime=" + completeTime +
+                ", tranDescription='" + tranDescription + '\'' +
+                ", transState=" + transState +
+                ", preHash='" + preHash + '\'' +
+                '}';
     }
 }

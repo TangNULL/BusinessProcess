@@ -14,17 +14,31 @@ import java.util.Map;
 @Component
 public class LocalCooperation {
 
-    private Map<Integer, ConsortiumBlock> localTotalCBP = new HashMap<>();  //保存本地所有的合作信息 Map<协作业务流程的bpId，流程实例>
+    private Map<Integer, ConsortiumBlock> localConsortiumChain;  //保存本地所有的合作信息，Map<协作业务流程的bpId，流程实例>
+    private Map<Integer, List<Transaction>> localTxcBP;  //某个业务流程对应的全部交易信息，Map<bpId，List<Txs>>
     private String address;  //本机ip地址
     private int port;  //本地端口号
     private User localUser;  //本地节点对应的用户
 
-    public Map<Integer, ConsortiumBlock> getLocalConsortiumChain() {
-        return localTotalCBP;
+    public LocalCooperation() {
+        this.localConsortiumChain = new HashMap<>();
+        this.localTxcBP = new HashMap<>();
     }
 
-    public void setLocalConsortiumChain(Map<Integer, ConsortiumBlock> localTotalCBP) {
-        this.localTotalCBP = localTotalCBP;
+    public Map<Integer, ConsortiumBlock> getLocalConsortiumChain() {
+        return localConsortiumChain;
+    }
+
+    public void setLocalConsortiumChain(Map<Integer, ConsortiumBlock> localConsortiumChain) {
+        this.localConsortiumChain = localConsortiumChain;
+    }
+
+    public Map<Integer, List<Transaction>> getLocalTxcBP() {
+        return localTxcBP;
+    }
+
+    public void setLocalTxcBP(Map<Integer, List<Transaction>> localTxcBP) {
+        this.localTxcBP = localTxcBP;
     }
 
     public String getAddress() {
@@ -52,19 +66,19 @@ public class LocalCooperation {
     }
 
     public boolean  addCooperation(ConsortiumBlock consortiumBlock) {
-        if (localTotalCBP.containsKey(consortiumBlock.getBpId())) {
+        if (localConsortiumChain.containsKey(consortiumBlock.getBpId())) {
             return false;
         } else {
-            localTotalCBP.put(consortiumBlock.getBpId(), consortiumBlock);
+            localConsortiumChain.put(consortiumBlock.getBpId(), consortiumBlock);
             return true;
         }
     }
 
     public boolean removeCooperation(ConsortiumBlock consortiumBlock) {
-        if (localTotalCBP.containsKey(consortiumBlock.getBpId())) {
+        if (localConsortiumChain.containsKey(consortiumBlock.getBpId())) {
             return false;
         } else {
-            localTotalCBP.put(consortiumBlock.getBpId(), consortiumBlock);
+            localConsortiumChain.put(consortiumBlock.getBpId(), consortiumBlock);
             return true;
         }
     }

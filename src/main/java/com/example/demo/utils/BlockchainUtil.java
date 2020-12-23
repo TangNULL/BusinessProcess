@@ -32,6 +32,9 @@ public class BlockchainUtil {
     //确认数据可以上传
     public final static int CONFIRM_FOR_UPLOAD = 8;
 
+    //从后往前上传数据
+    public final static int UPLOAD_DATA = 8;
+
     //区块链种子节点
     public final static String SEED_NODE1 = "ws://172.19.187.200:7005";
     public final static String SEED_NODE2 = "ws://172.19.187.200:7006";

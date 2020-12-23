@@ -44,4 +44,5 @@ public class PublicBlock extends LightBlock {
     public void setUsersState(String usersState) {
         this.usersState = usersState;
     }
+
 }

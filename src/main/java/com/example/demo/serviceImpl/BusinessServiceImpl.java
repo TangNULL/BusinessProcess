@@ -108,7 +108,8 @@ public class BusinessServiceImpl implements BusinessService {
                 Timestamp comTime = new Timestamp(System.currentTimeMillis());
                 businessProcess.setCompleteTime(comTime);
                 //TODO 合作结束上传协作数据
-//                if(consortiumBlockchainService.uploadPhase(bpId)){
+
+//                if(consortiumBlockchainService.generatePhase()){
 //
 //                }
 

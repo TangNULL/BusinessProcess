@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -84,7 +85,7 @@ public class ConsensusServiceImpl implements ConsensusService {
      * @return 多次重复的同一个字符串
      */
     private static String repeat(String str, int repeatTime) {
-        return String.valueOf(str).repeat(Math.max(0, repeatTime));
+        return String.join("", Collections.nCopies(repeatTime, str));
     }
 
     /**

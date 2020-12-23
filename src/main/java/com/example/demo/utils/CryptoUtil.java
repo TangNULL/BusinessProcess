@@ -2,6 +2,7 @@ package com.example.demo.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.PublicBlock;
+import com.example.demo.entity.Transaction;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -13,7 +14,7 @@ import java.security.MessageDigest;
 public class CryptoUtil {
     /**
      * sha256 哈希函数
-     * @param str
+     * @param str 需要加密的字符串
      * @return encodeStr
      */
     public static String SHA256(String str) {
@@ -53,9 +54,18 @@ public class CryptoUtil {
     }
 
     /**
+     * 对交易内容加密
+     * @param tx 需要加密的交易
+     * @return 加密后的交易
+     */
+    public static String encryptTx(Transaction tx) {
+        return JSON.toJSONString(tx);
+    }
+
+    /**
      * 计算当前区块的哈希值
      *
-     * @param curBlock
+     * @param curBlock 需要计算哈希值的区块
      * @return 当前区块的哈希值
      */
     public static String calcBlockHash(PublicBlock curBlock) {
@@ -64,5 +74,14 @@ public class CryptoUtil {
         String strTx = JSON.toJSONString(curBlock.getTxs());
         String nonce = String.valueOf(curBlock.getNonce());
         return CryptoUtil.SHA256(preHash + strUser + strTx + nonce);
+    }
+
+    /**
+     * 计算交易的哈希值
+     * @param curTx 需要计算的交易
+     * @return 当前交易的哈希值
+     */
+    public static String calcTxHash(Transaction curTx) {
+        return CryptoUtil.SHA256(curTx.toString());
     }
 }

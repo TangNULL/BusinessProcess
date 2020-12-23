@@ -22,6 +22,8 @@ public class NetworkUtil {
 
     /**
      * 将用户id转化为对应的用户ip地址
+     * @param userId 用户id
+     * @return 对应用户ip
      */
     public static String getAddressById(Integer userId) {
         //在数据库查找用户

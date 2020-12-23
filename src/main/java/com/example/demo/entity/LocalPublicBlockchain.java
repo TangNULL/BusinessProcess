@@ -14,12 +14,19 @@ import java.util.Set;
 
 @Component
 public class LocalPublicBlockchain {
-    private List<PublicBlock> blockChain = new ArrayList<>();  //本地节点上保存的区块信息
-    private Set<Transaction> txCache = new HashSet<>();  //本地节点上接收到的交易池信息
-    private List<User> users = new ArrayList<>();  //本地节点上保存的用户全局状态
-    private List<WebSocket> sockets = new ArrayList<>();  //本地节点上的邻居节点
+    private List<PublicBlock> blockChain;  //本地节点上保存的区块信息
+    private List<Transaction> txCache;  //本地节点上接收到的交易池信息
+    private List<User> users;  //本地节点上保存的用户全局状态
+    private List<WebSocket> sockets;  //本地节点上的邻居节点
     private String address;  //本机ip地址
     private int port;  //本地端口号
+
+    public LocalPublicBlockchain() {
+        blockChain = new ArrayList<>();
+        txCache = new ArrayList<>();
+        users = new ArrayList<>();
+        sockets = new ArrayList<>();
+    }
 
     public List<PublicBlock> getBlockChain() {
         return blockChain;
@@ -29,11 +36,11 @@ public class LocalPublicBlockchain {
         this.blockChain = blockChain;
     }
 
-    public Set<Transaction> getTxCache() {
+    public List<Transaction> getTxCache() {
         return txCache;
     }
 
-    public void setTxCache(Set<Transaction> txCache) {
+    public void setTxCache(List<Transaction> txCache) {
         this.txCache = txCache;
     }
 
@@ -73,7 +80,7 @@ public class LocalPublicBlockchain {
     public PublicBlock getLatestBlock() { return blockChain.size() > 0 ? blockChain.get(blockChain.size() - 1) : null; }
 
     //添加交易缓存
-    public void addTxCache(Set<Transaction> txs) {
+    public void addTxCache(List<Transaction> txs) {
         txCache.addAll(txs);
     }
 

@@ -65,7 +65,7 @@ public class BlockController {
     @GetMapping("/upload")
     @ResponseBody
     public String uploadData(Integer bpId) {
-        consortiumBlockchainService.uploadPhase(bpId);
+//        consortiumBlockchainService.uploadPhase(bpId);
         return JSON.toJSONString(localBlockChain.getTxCache());
     }
 }

@@ -8,6 +8,9 @@ public class CooperationUtil {
     //标志通讯错误
     public final static int ERROR_USER_ID = -99;
 
+    //重复发送错误
+    public final static int REPEAT_ID = -98;
+
     //标志不需要使用的transId
     public final static int USELESS_USER_ID = -2;
 
