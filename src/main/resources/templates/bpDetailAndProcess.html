@@ -176,7 +176,7 @@
     //document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
     document.getElementById("bpIdNum").innerHTML = "业务流程：" + bpId
 
-    $("bpDescription").blur(function(){
+    $("#bpDescription").blur(function(){
         document.getElementById("txsJson").innerHTML="[{senderId:"+userId+",receiverId:"+$("#selectReceiver option:selected").attr('id')+",tranDescription:'"+$("#bpDescription").val()+"'}]"
     });
 
