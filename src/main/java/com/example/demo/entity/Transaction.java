@@ -32,6 +32,7 @@ public class Transaction {
     }
 
     public Transaction(Transaction t) {
+        this.bpId = t.getBpId();
         this.transId = t.getTransId();
         this.hash = t.getHash();
         this.senderId = t.getSenderId();
@@ -44,7 +45,8 @@ public class Transaction {
         this.consultation = t.getConsultation();
     }
 
-    public Transaction(Integer transId, String hash, Integer senderId, Integer receiverId, Timestamp createTime, Timestamp completeTime, String tranDescription, Boolean isSenderAck, Boolean isReceiverAck, String consultation) {
+    public Transaction(Integer bpId, Integer transId, String hash, Integer senderId, Integer receiverId, Timestamp createTime, Timestamp completeTime, String tranDescription, Boolean isSenderAck, Boolean isReceiverAck, String consultation) {
+        this.bpId = bpId;
         this.transId = transId;
         this.hash = hash;
         this.senderId = senderId;

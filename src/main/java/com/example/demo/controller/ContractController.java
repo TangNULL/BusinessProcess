@@ -34,16 +34,15 @@ public class ContractController {
         //transactionList = "[{senderId:3,receiverId:4,tranDescription:交易内容}]";
 
 
-        Gson gson = new Gson();
+        /*Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Transaction>>() {
         }.getType();
-        List<Transaction> list = gson.fromJson(transactionList, type);
+        List<Transaction> list = gson.fromJson(transactionList, type);*/
 
         String s = "";
         int code = 0;
-        /*List<Transaction> transactionList = new ArrayList<>();
-        transactionList.add(new Transaction(1, 2, "1 give 2 3yuan"));
-        transactionList.add(new Transaction(2, 1, "2 give 1 2 bags"));*/
+        List<Transaction> list = new ArrayList<>();
+        list.add(new Transaction(senderId, receiverId, bpDescription));
         if (bpId == null || bpId.equals("")) {
             bpId = null;
         }
