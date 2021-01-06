@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.BPContract;
 import com.example.demo.entity.ConsortiumBlock;
 import com.example.demo.entity.NetworkMsg;
 import com.example.demo.entity.Transaction;
@@ -13,8 +14,11 @@ import java.util.List;
 public interface ConsortiumBlockchainService{
 
     //联盟链生命周期的三个阶段
-    boolean downloadPhase(Integer bpId, Integer senderId, Integer receiverId, String tranDescription);  //生成联盟链
-    boolean generatePhase(Transaction preCoopTx, Integer bpId, Integer selfId, Integer nextId, String tranDescription);  //联盟链扩展
+//    boolean downloadPhase(Integer bpId, Integer senderId, Integer receiverId, String tranDescription);  //生成联盟链
+    boolean downloadPhase(Transaction coopTx);  //生成联盟链
+    //    boolean generatePhase(Transaction preCoopTx, Integer bpId, Integer selfId, Integer nextId, String tranDescription);  //联盟链扩展
+//    boolean generatePhase(Transaction preCoopTx, Transaction nextTx);  //联盟链扩展
+    boolean generatePhase(Transaction coopTx);  //联盟链扩展
     String uploadPhase(ConsortiumBlock cBPBlock);  //联盟链上传
 
     //联盟链传递的消息
