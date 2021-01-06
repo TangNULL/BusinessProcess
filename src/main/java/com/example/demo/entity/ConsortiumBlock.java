@@ -11,8 +11,8 @@ public class ConsortiumBlock {
     private Map<Integer, Transaction> outputTxs;  //本地节点上保存的发出的协作请求，Map<txId, outputTx>
     private Map<Integer, List<Integer>> inputs2Outputs;  //本地节点的协作对应关系，Map<inputTxId, List<outputTxId>> 为了响应哪个tx的协作请求
     private Map<Integer, Integer> outputs2Inputs;  //本地节点的协作对应关系，Map<outputTxId, inputTxId> 为了响应哪个tx的协作请求
-    private Map<Integer, User> inputUsers;  //本地节点保存的需要和自己协作用户，Map<txId, inputUser>
-    private Map<Integer, User> outputUsers;  //本地节点保存的需要的其他协作用户，Map<txId, outputUser>
+    private Map<Integer, Integer> inputUsers;  //本地节点保存的需要和自己协作用户，Map<txId, inputUser>
+    private Map<Integer, Integer> outputUsers;  //本地节点保存的需要的其他协作用户，Map<txId, outputUser>
     private Map<Integer, Integer> finishedTxsCount;  //标记当前的任务对应的后续任务有多少已经完成，Map<inputTxId, finishedTxCount>
     private Map<Integer, List<Integer>> finishedTxs;  //当前任务哪些后续任务完成了，Map<inputTxId, List<outputTxId>>
     private Map<Integer, List<String>> uploadData;  //当前节点上需要上传的前置事件对应的后续事件的处理结果，Map<inputTxId, List<EncryptTx>>
@@ -79,19 +79,19 @@ public class ConsortiumBlock {
         this.outputs2Inputs = outputs2Inputs;
     }
 
-    public Map<Integer, User> getInputUsers() {
+    public Map<Integer, Integer> getInputUsers() {
         return inputUsers;
     }
 
-    public void setInputUsers(Map<Integer, User> inputUsers) {
+    public void setInputUsers(Map<Integer, Integer> inputUsers) {
         this.inputUsers = inputUsers;
     }
 
-    public Map<Integer, User> getOutputUsers() {
+    public Map<Integer, Integer> getOutputUsers() {
         return outputUsers;
     }
 
-    public void setOutputUsers(Map<Integer, User> outputUsers) {
+    public void setOutputUsers(Map<Integer, Integer> outputUsers) {
         this.outputUsers = outputUsers;
     }
 
@@ -123,18 +123,18 @@ public class ConsortiumBlock {
      * 给本地用户添加合作用户
      * @param userType 输入用户还是输出用户
      * @param transId 合作的事件transId
-     * @param newUser 用户信息
+     * @param userId 用户信息
      * @return 是否添加成功
      */
-    public boolean addUser(int userType, int transId, User newUser) {
+    public boolean addUser(int userType, int transId, Integer userId) {
         //User是需要合作的其他用户
         if (userType == CooperationUtil.OUTPUT_USER) {
-            outputUsers.put(transId, newUser);
+            outputUsers.put(transId, userId);
             return true;
         }
         //User是申请和我合作的其他用户
         else if (userType == CooperationUtil.INPUT_USER) {
-            inputUsers.put(transId, newUser);
+            inputUsers.put(transId, userId);
             return true;
         }
         return false;

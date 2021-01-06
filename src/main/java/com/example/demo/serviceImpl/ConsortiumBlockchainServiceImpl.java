@@ -2,6 +2,7 @@ package com.example.demo.serviceImpl;
 
 import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.*;
+import com.example.demo.mapper.BusinessMapper;
 import com.example.demo.service.ConsortiumBlockchainService;
 import com.example.demo.service.BlockService;
 import com.example.demo.service.WebSocketService;
@@ -15,6 +16,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * 联盟链双向验证算法
+ * 每一步双向传播确认信息真实性，需要经过三次双向传递，才能获得全部的交易数据并且上传
+ * Step1 head-->tail: 合作从FIRST_TX开始，到LAST_TX结束。每个bpId对应一个流程实例，每个bpId只能有1个FIRST_TX，
+ * 但是可以有多个LAST_TX，LAST_TX只表示当前用户的任务做完了且不需要其他人（包括自己）的合作了
+ * tail-->head: LAST_TX任务完成后前向反馈通知前序节点，如果前置合作的所有后继合作都是已完成状态，则前置合作也被标记成已完成，同时继续向前传递消息
+ * 这里每个节点向前通知的时候会附带上自己的的已完成任务的哈希值用来在后续步骤校验本地任务没有改动
+ * Step2 head-->tail: 当到达FIRST_TX的时候，如果第一个任务已经是完成状态，则开始后向传播，通知后续节点准备上传数据，把当前任务标记成可上传状态，
+ * 这里每个节点校验下一个活动的哈希值是否正确，以此来证明下游没有造假
+ * tail-->head: 当确认传播到达LAST_TX时，数据加密后往前传播，同时二次校验哈希值
+ * Step3 head-->tail: 第一个用户接收到全部的交易数据后，发送给其他用户，每个用户检验自己的交易是否一致
+ * tail-->head: 每个节点传回交易数据无误的确认回复后，第一个用户上传本地协作业务流程的全部加密任务，用户的秘钥哈希值，参与的用户真实信息
+ */
+
 
 @Service
 public class ConsortiumBlockchainServiceImpl implements ConsortiumBlockchainService {
@@ -33,26 +49,36 @@ public class ConsortiumBlockchainServiceImpl implements ConsortiumBlockchainServ
     @Autowired
     ConsortiumBPClient consortiumBPClient;
 
+    @Autowired
+    BusinessMapper businessMapper;
+
     @Override
-    public boolean downloadPhase(Integer bpId, Integer senderId, Integer receiverId, String tranDescription) {
+    public boolean downloadPhase(Transaction coopTx) {
         //向公有链发起状态申请
+        Integer bpId = coopTx.getBpId();
+        Integer senderId = coopTx.getSenderId();
+        Integer receiverId = coopTx.getReceiverId();
+
         if(isValidUser(senderId) && isValidUser(receiverId)) {
             //首先添加自己的事件
             //第一个事件的初始化
             ConsortiumBlock consortiumBlock = new ConsortiumBlock(bpId);
-            Transaction coopTx = new Transaction(bpId, senderId, receiverId, tranDescription);
-            coopTx.setTransId(1);
+//            Transaction coopTx = new Transaction(bpId, senderId, receiverId, tranDescription);
+//            coopTx.setTransId(1);
             coopTx.setPreHash("");
-            if(consortiumBlock.addUser(CooperationUtil.OUTPUT_USER, coopTx.getTransId(), new User(receiverId))
+            if(consortiumBlock.addUser(CooperationUtil.OUTPUT_USER, coopTx.getTransId(), receiverId)
                     && consortiumBlock.addTx(CooperationUtil.FIRST_TX, CooperationUtil.USELESS_USER_ID, coopTx)) {
                 //向其他协作者发起协作请求
                 String receiverAddress = NetworkUtil.getAddressById(receiverId);
                 if(receiverAddress == null) {
                     return false;
                 }
+
+
                 consortiumBPClient.init(receiverAddress, applyForCooperation(coopTx));
-                //合作信息保存在本地
+                //TODO: 合作信息保存在本地
                 localCooperation.addCooperation(consortiumBlock);
+                System.out.println(JSON.toJSONString(localCooperation));
                 return true;
             }
         }
@@ -74,50 +100,45 @@ public class ConsortiumBlockchainServiceImpl implements ConsortiumBlockchainServ
         return false;
     }
 
-    /**
-     * transId对应的合作outputTx可能有很多个，每个outputTx对应一个唯一的transId
-     * @param preCoopTx 前一个事件的transId
-     * @param bpId 当前业务流程实例的bpId
-     * @param selfId 自己的userId
-     * @param nextId 下一个需要合作的userId，如果没有则是 FINISH_USER_ID
-     * @param tranDescription 需要做的事情的描述
-     * @return 是否发起合作成功
-     */
+//    /**
+//     * transId对应的合作outputTx可能有很多个，每个outputTx对应一个唯一的transId
+//     * @param preCoopTx 前一个事件的transId
+//     * @param bpId 当前业务流程实例的bpId
+//     * @param selfId 自己的userId
+//     * @param nextId 下一个需要合作的userId，如果没有则是 FINISH_USER_ID
+//     * @param tranDescription 需要做的事情的描述
+//     * @return 是否发起合作成功
+//     */
 
-    /**
-     * 双向验证算法
-     * 每一步双向传播确认信息真实性，需要经过三次双向传递，才能获得全部的交易数据并且上传
-     * Step1 head-->tail: 合作从FIRST_TX开始，到LAST_TX结束。每个bpId对应一个流程实例，每个bpId只能有1个FIRST_TX，
-     * 但是可以有多个LAST_TX，LAST_TX只表示当前用户的任务做完了且不需要其他人（包括自己）的合作了
-     * Step2 tail-->head: LAST_TX任务完成后前向反馈通知前序节点，如果前置合作的所有后继合作都是已完成状态，则前置合作也被标记成已完成，同时继续向前传递消息
-     * 这里每个节点向前通知的时候会附带上自己的的已完成任务的哈希值用来在后续步骤校验本地任务没有改动
-     * head-->tail: 当到达FIRST_TX的时候，如果第一个任务已经是完成状态，则开始后向传播，通知后续节点准备上传数据，把当前任务标记成可上传状态
-     * tail-->head: 当确认传播到达LAST_TX时，数据上传公有链，把本地交易上传到联盟链
-     * Step3 head-->tail: 上传的时候                      第一个用户上传全部的交易数据，然后发送给其他用户检验，确认无误后向全网广播
-     * tail-->head: 第一个节点把全体的数据上链，但是需要经过其他所有节点的验证
-     */
     @Override
-    public boolean generatePhase(Transaction preCoopTx, Integer bpId, Integer selfId, Integer nextId, String tranDescription) {
-        //前端确认合作之后触发
-        //首先添加自己的事件
+    public boolean generatePhase(Transaction coopTx) {
+        Integer bpId = coopTx.getBpId();
+        Integer senderId = coopTx.getSenderId();
+        Integer receiverId = coopTx.getReceiverId();
+        String tranDescription = coopTx.getTranDescription();
+        //前端确认合作或者向后申请其他合作时触发
+        Integer localUserId = localCooperation.getLocalUser().getUserid();
         ConsortiumBlock consortiumBlock = localCooperation.getLocalConsortiumChain().get(bpId);
-
-        //添加自己和自己的前置节点，用用户指针将区块连接在一起，每一个区块对应一个用户的业务流程
-        if(consortiumBlock.addUser(CooperationUtil.INPUT_USER, preCoopTx.getTransId(), new User(preCoopTx.getSenderId()))
-                && consortiumBlock.addTx(CooperationUtil.INPUT_TX, CooperationUtil.USELESS_USER_ID, preCoopTx)) {
-
-            //前向回复，后向传播
-            consortiumBPClient.init(NetworkUtil.getAddressById(preCoopTx.getSenderId()),
-                    confirmCooperation(preCoopTx));
-            //这里还需要收到前置节点确认收到的确认回复，不过暂时不实现了
-
+        //如果是申请和我的合作，需要返回一个确认回复，这里在确认的时候用
+        if (localUserId.equals(receiverId)) {
+            //添加自己和自己的前置节点，用用户指针将区块连接在一起，每一个区块对应一个用户的业务流程
+            if(consortiumBlock.addUser(CooperationUtil.INPUT_USER, coopTx.getTransId(), coopTx.getSenderId())
+                    && consortiumBlock.addTx(CooperationUtil.INPUT_TX, CooperationUtil.USELESS_USER_ID, coopTx)) {
+                //前向回复，确认收到
+                consortiumBPClient.init(NetworkUtil.getAddressById(coopTx.getSenderId()),
+                        confirmCooperation(coopTx));
+                return true;
+            }
+        }
+        if (localUserId.equals(senderId)) {
+            //如果是我申请的和别人的合作
             //说明无后续节点，这里做完了直接业务流程就完事了
-            if (nextId.equals(CooperationUtil.FINISH_USER_ID)) {
-                Transaction lastTx = new Transaction(bpId, selfId, nextId, tranDescription);
+            if (receiverId.equals(CooperationUtil.FINISH_USER_ID)) {
+                Transaction lastTx = new Transaction(bpId, senderId, receiverId, tranDescription);
                 //TODO: 本地节点的事情做完之后发送给前置节点
                 //需要在本节点的任务完成后触发按键设置最后一个tx为可上传的状态，但是这里简化一下操作，直接变成可上传状态，以作测试之用
                 lastTx.setTransState(CooperationUtil.CONFIRM_APPLY_STATE);
-                consortiumBlock.addTx(CooperationUtil.LAST_TX, preCoopTx.getTransId(), lastTx);
+                consortiumBlock.addTx(CooperationUtil.LAST_TX, coopTx.getTransId(), lastTx);
                 //合作信息保存在本地
                 localCooperation.addCooperation(consortiumBlock);
 
@@ -126,13 +147,12 @@ public class ConsortiumBlockchainServiceImpl implements ConsortiumBlockchainServ
                 return true;
             } else {
                 //向其他节点发起协作申请
-                Transaction coopTx = new Transaction(bpId, selfId, nextId, tranDescription);
-                consortiumBlock.addTx(CooperationUtil.OUTPUT_TX, preCoopTx.getTransId(), coopTx);
+                consortiumBlock.addTx(CooperationUtil.OUTPUT_TX, coopTx.getTransId(), coopTx);
                 //合作信息保存在本地
                 localCooperation.addCooperation(consortiumBlock);
-                if (consortiumBlock.addUser(CooperationUtil.OUTPUT_USER, coopTx.getTransId(), new User(nextId))
-                        && consortiumBlock.addTx(CooperationUtil.OUTPUT_TX, preCoopTx.getTransId(), coopTx)) {
-                    String receiverAddress = NetworkUtil.getAddressById(nextId);
+                if (consortiumBlock.addUser(CooperationUtil.OUTPUT_USER, coopTx.getTransId(), receiverId)
+                        && consortiumBlock.addTx(CooperationUtil.OUTPUT_TX, coopTx.getTransId(), coopTx)) {
+                    String receiverAddress = NetworkUtil.getAddressById(receiverId);
                     if(receiverAddress == null) {
                         return false;
                     }
@@ -141,6 +161,7 @@ public class ConsortiumBlockchainServiceImpl implements ConsortiumBlockchainServ
                 }
             }
         }
+        System.out.println("交易信息有误！");
         return false;
     }
 
@@ -220,16 +241,21 @@ public class ConsortiumBlockchainServiceImpl implements ConsortiumBlockchainServ
     public void handleApplyForCooperation(String bpData) {
         //反序列化得到其它节点传来的协作流程
         Transaction receivedTx = JSON.parseObject(bpData, Transaction.class);
-        localCooperation.getLocalConsortiumChain().get(receivedTx.getBpId()).addTx(CooperationUtil.INPUT_TX, CooperationUtil.USELESS_USER_ID, receivedTx);
         ConsortiumBlock consortiumBlock;
         if (localCooperation.getLocalConsortiumChain().containsKey(receivedTx.getBpId())) {
+//            localCooperation.getLocalConsortiumChain().get(receivedTx.getBpId()).addTx(CooperationUtil.INPUT_TX, CooperationUtil.USELESS_USER_ID, receivedTx);
             consortiumBlock = localCooperation.getLocalConsortiumChain().get(receivedTx.getBpId());
         } else {
             consortiumBlock = new ConsortiumBlock(receivedTx.getBpId());
         }
         //TODO: 在接收节点前端展示接收到的合作请求，保存在消息队列中
         //确认合作之后保存在本地
-        localCooperation.getLocalConsortiumChain().put(receivedTx.getBpId(), consortiumBlock);
+//        consortiumBlock.addTx(CooperationUtil.INPUT_TX, CooperationUtil.USELESS_USER_ID, receivedTx);
+//        localCooperation.getLocalConsortiumChain().put(receivedTx.getBpId(), consortiumBlock);
+        if (businessMapper.InsertTransaction(receivedTx) == 0) {
+            System.out.println("Error");
+        }
+
     }
 
     @Override
