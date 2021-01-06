@@ -33,10 +33,10 @@
 
 
     <insert id="batchInsertTransactions" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="transId">
-        insert into transactionDescription (senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
+        insert into transactionDescription (bpId,senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
         values
         <foreach collection="list" item="t" separator=",">
-            (#{t.senderId},#{t.receiverId},now(),#{t.tranDescription},false,false)
+            (#{t.bpId},#{t.senderId},#{t.receiverId},now(),#{t.tranDescription},false,false)
         </foreach>
     </insert>
 

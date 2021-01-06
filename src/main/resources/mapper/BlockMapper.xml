@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.BlockMapper">
+    <select id="findBPByBPId" resultMap="BusinessProcessMap1">
+        select * from bpDescription bp where bp.bpId=#{bpId};
+    </select>
+
+    <select id="findLatestBP" resultMap="BusinessProcessMap1">
+        select * from bpDescription bp where bp.blockId is not null order by bp.blockId desc limit 0,1;
+    </select>
+
+    <select id="findBPsByBlockId" resultMap="BusinessProcessMap1">
+        select * from bpDescription bp where bp.blockId=#{blockId};
+    </select>
+
+    <select id="findAllBPsByUserId" resultMap="BusinessProcessMap1">
+        select * from bpDescription bp where bp.bpId in (select bpId from input_transaction intran where intran.senderId=#{userId} or intran.receiverId=#{userId});
+    </select>
+
+    <!--<select id="findWaitingBPsByUserId" resultMap="BusinessProcessMap1">
+        select * from bpDescription bp where bp.bpId in (select bpId from input_transaction intran where intran.receiverId=#{userId} and intran.isReceiverAck=false);
+    </select>
+
+    <select id="findUnclosedBPsByUserId" resultMap="BusinessProcessMap1">
+        select * from bpDescription bp where bp.completeTime is null;
+    </select>
+
+    <select id="findClosedBPsByUserId" resultMap="BusinessProcessMap1">
+        select * from bpDescription bp where bp.completeTime is not null;
+    </select>-->
+
+    <select id="findTransactionByTranId" resultType="Transaction">
+        select * from input_transaction where transId=#{transId};
+    </select>
+
+    <select id="findTxsByBPId" resultType="Transaction">
+        select * from input_transaction where bpId=#{businessProcessId};
+    </select>
+
+    <select id="findAllTxsByUserIdAndBpId" resultType="Transaction">
+        select * from input_transaction where bpId=#{bpId} and (senderId=#{userId} or receiverId=#{userId});
+    </select>
+
+    <select id="findWaitingTxsByUserIdAndBpId" resultType="Transaction">
+        select * from input_transaction where bpId=#{bpId} and receiverId=#{userId} and isReceiverAck=false;
+    </select>
+
+
+    <insert id="insertBPDescription" useGeneratedKeys="true" keyProperty="bpId">
+         insert into bpDescription (createTime)
+    values
+    (now())
+    </insert>
+
+    <insert id="insertTransaction_input" parameterType="Transaction">
+         insert into input_transaction (bpId,transId,senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
+         values
+     (#{bpId},#{transId},#{senderId},#{receiverId},now(),#{tranDescription},true,false)
+     </insert>
+
+    <insert id="insertTransaction_output" useGeneratedKeys="true" keyProperty="transId" parameterType="Transaction">
+         insert into output_transaction (bpId,senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
+         values
+     (#{bpId},#{senderId},#{receiverId},now(),#{tranDescription},true,false)
+     </insert>
+
+
+    <update id="updateBP" parameterType="BusinessProcess">
+        UPDATE bpdescription
+        <trim prefix="set" suffixOverrides=",">
+            <if test="blockId!=null">blockId=#{blockId},</if>
+            <if test="ackUsers!=null">ackUsers=#{ackUsers},</if>
+            <if test="completeTime!=null">completeTime=#{completeTime},</if>
+        </trim>
+        WHERE bpId=#{bpId}
+    </update>
+
+    <update id="updateTransaction_input" parameterType="Transaction">
+        UPDATE input_transaction
+        <trim prefix="set" suffixOverrides=",">
+            <if test="hash!=null">hash=#{hash},</if>
+            <if test="completeTime!=null">completeTime=#{completeTime},</if>
+            <if test="isSenderAck!=null">isSenderAck=#{isSenderAck},</if>
+            <if test="isReceiverAck!=null">isReceiverAck=#{isReceiverAck},</if>
+            <if test="consultation!=null">consultation=#{consultation},</if>
+        </trim>
+        WHERE transId=#{transId}
+    </update>
+
+    <update id="updateTransaction_output" parameterType="Transaction">
+        UPDATE output_transaction
+        <trim prefix="set" suffixOverrides=",">
+            <if test="hash!=null">hash=#{hash},</if>
+            <if test="completeTime!=null">completeTime=#{completeTime},</if>
+            <if test="isSenderAck!=null">isSenderAck=#{isSenderAck},</if>
+            <if test="isReceiverAck!=null">isReceiverAck=#{isReceiverAck},</if>
+            <if test="consultation!=null">consultation=#{consultation},</if>
+        </trim>
+        WHERE transId=#{transId}
+    </update>
+
+    <resultMap id="BusinessProcessMap1" type="com.example.demo.entity.BusinessProcess">
+        <id column="bpId" jdbcType="INTEGER" property="bpId"/>
+
+        <result column="blockId" jdbcType="INTEGER" property="blockId"/>
+        <result column="ackUsers" jdbcType="VARCHAR" property="ackUsers"/>
+        <result column="createTime" jdbcType="INTEGER" property="createTime"/>
+        <result column="completeTime" jdbcType="INTEGER" property="completeTime"/>
+
+        <collection column="businessProcessId=bpId" property="userList"
+                    ofType="com.example.demo.entity.User" select="com.example.demo.mapper.UserMapper.findUsersByBPId">
+        </collection>
+
+        <collection column="businessProcessId=bpId" property="txList"
+                    ofType="com.example.demo.entity.Transaction" select="findTxsByBPId">
+        </collection>
+
+    </resultMap>
+
+
+</mapper>

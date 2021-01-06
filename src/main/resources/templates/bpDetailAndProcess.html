@@ -176,8 +176,8 @@
     //document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
     document.getElementById("bpIdNum").innerHTML = "业务流程：" + bpId
 
-    $("#bpDescription").blur(function(){
-        document.getElementById("txsJson").innerHTML="[{senderId:"+userId+",receiverId:"+$("#selectReceiver option:selected").attr('id')+",tranDescription:'"+$("#bpDescription").val()+"'}]"
+    $("#bpDescription").blur(function () {
+        document.getElementById("txsJson").innerHTML = "[{senderId:" + userId + ",receiverId:" + $("#selectReceiver option:selected").attr('id') + ",tranDescription:'" + $("#bpDescription").val() + "'}]"
     });
 
     $.ajax({
@@ -204,44 +204,22 @@
 
     $.ajax({
         type: "GET",
-        url: "/getAllContractsByBPIdAndUserId",
+        url: "/getWaitingTxsByBPIdAndUserId",
         data: {bpId: bpId, userId: userId},
         success: function (respMsg) {
             if (respMsg.code == 0) {
                 for (var x of respMsg.data) {
-                    var txStr = ""
-                    var index = 1
-                    var blue = false
-                    for (var item of x.transactionList) {
-                        if (x.receiverAccepted == true && (!item.senderAck || !item.receiverAck)) {
-                            blue = true
-                        }
-                        if (x.receiverAccepted == true && ((!item.senderAck && item.senderId == userId) || (!item.receiverAck && item.receiverId == userId))) {
-                            txStr = txStr + "<p class='col-lg-11'>" + index + "." + JSON.stringify(item) + "</p><button type='button' class='btn btn-primary col-lg-offset-11 col-lg-1' onclick=\"completeTx('" + item.transId + "')\">完成</button>\n"
-                        } else
-                            txStr = txStr + "<p class='col-lg-11'>" + index + "." + JSON.stringify(item) + "</p>\n"
-                        index++
-                    }
-                    var conType = ""
-                    if (x.receiverAccepted == true && blue) {
-                        conType = "<div class=\"panel panel-primary\">\n"
-                    } else if (x.receiverAccepted == true) {
-                        conType = "<div class=\"panel panel-success\">\n"
-                    } else if (x.receiverAccepted == false) {
-                        conType = "<div class=\"panel panel-danger\">\n"
-                    } else {  //未被处理的合作请求
-                        conType = "<div class=\"panel panel-default\">\n"
-                    }
+                    var txStr = "<p class='col-lg-11'>" + JSON.stringify(x) + "</p><button type='button' class='btn btn-primary col-lg-offset-11 col-lg-1' onclick=\"completeTx('" + x.transId + "')\">完成</button>\n"
+                    var conType = "<div class=\"panel panel-primary\">\n"
                     var conshtml = "<div class=\"col-lg-12\">\n" +
                         conType +
                         "                    <div class=\"panel-heading\">\n" +
-                        "                        contractId：" + x.contractId + "\n" +
+                        "                        contractId：" + x.transId + "\n" +
                         "                    </div>\n" +
                         "                    <div class=\"panel-body\">\n" +
-                        "                        <p>发起人Id：" + x.bpSenderId + "</p>\n" +
-                        "                        <p>接收人Id：" + x.bpReceiverId + "</p>\n" +
-                        "                        <p>合同描述：" + x.bpDescription + "</p>\n" +
-                        "                        <p>合作实例：" + "</p>\n" +
+                        "                        <p>发起人Id：" + x.senderId + "</p>\n" +
+                        "                        <p>接收人Id：" + x.receiverId + "</p>\n" +
+                        "                        <p>Tx实例：" + "</p>\n" +
                         txStr +
                         "                    </div>\n" +
                         "                </div>\n" +

@@ -2,7 +2,6 @@ package com.example.demo.serviceImpl;
 
 import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.*;
-import com.example.demo.mapper.BusinessMapper;
 import com.example.demo.service.ConsortiumBlockchainService;
 import com.example.demo.service.BlockService;
 import com.example.demo.service.WebSocketService;
@@ -48,9 +47,6 @@ public class ConsortiumBlockchainServiceImpl implements ConsortiumBlockchainServ
 
     @Autowired
     ConsortiumBPClient consortiumBPClient;
-
-    @Autowired
-    BusinessMapper businessMapper;
 
     @Override
     public boolean downloadPhase(Transaction coopTx) {
@@ -252,9 +248,7 @@ public class ConsortiumBlockchainServiceImpl implements ConsortiumBlockchainServ
         //确认合作之后保存在本地
 //        consortiumBlock.addTx(CooperationUtil.INPUT_TX, CooperationUtil.USELESS_USER_ID, receivedTx);
 //        localCooperation.getLocalConsortiumChain().put(receivedTx.getBpId(), consortiumBlock);
-        if (businessMapper.InsertTransaction(receivedTx) == 0) {
-            System.out.println("Error");
-        }
+
 
     }
 

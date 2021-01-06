@@ -192,7 +192,7 @@
     var userId = params.get('userId')
     document.getElementById("publicChainBtn").setAttribute("href", "/publicChain?identity=" + identity + "&userId=" + userId);
     document.getElementById("consortiumChainBtn").setAttribute("href", "/consortiumChain?identity=" + identity + "&userId=" + userId);
-   // document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
+    // document.getElementById("bpRecordBtn").setAttribute("href", "/bpRecord?identity=" + identity + "&userId=" + userId);
 
 
     $.ajax({
@@ -207,24 +207,17 @@
                     for (var y of x.userList) {
                         anticipantSet.push(y.username)
                     }
-                    for (var y of x.bpContractList) {
-                        for (var z of y.transactionList) {
-                            if (z.hash == null) {
-                                continue
-                            }
-                            var tx = "Tx:" + z.hash + "   " + z.senderId + "-->" + z.receiverId
-                            txArr.push(tx)
-                        }
+                    for (var y of x.txList) {
+                        var tx = "Tx:" + y.hash + "   " + y.senderId + "-->" + y.receiverId
+                        txArr.push(tx)
                     }
                     var usersStr = ""
                     for (var item of anticipantSet) {
                         usersStr = usersStr + item + " "
                     }
                     var txStr = ""
-                    var index = 1
                     for (var item of txArr) {
-                        txStr = txStr + index + "." + item + " \n"
-                        index++
+                        txStr = txStr + "<p>" + item + "<\p> \n"
                     }
                     var bpshtml = "<div class=\"col-lg-12\">\n" +
                         "                <div class=\"panel panel-default\">\n" +
@@ -233,8 +226,8 @@
                         "                    </div>\n" +
                         "                    <div class=\"panel-body\">\n" +
                         "                        <p>参与组织：" + usersStr + "</p>\n" +
-                        "                        <p>合作实例：" + "</p>\n" +
-                        "                        <p>" + txStr + "</p>\n" +
+                        "                        <p>Tx实例：" + "</p>\n" +
+                        "                        " + txStr + "\n" +
                         "                    </div>\n" +
                         "                    <div class=\"panel-footer\">\n" +
                         "                        所在区块：" + x.blockId + "\n" +

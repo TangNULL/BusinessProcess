@@ -5,15 +5,11 @@ import com.example.demo.service.BPManageService;
 import com.example.demo.service.BusinessService;
 import com.example.demo.service.UserManageService;
 import com.example.demo.utils.ConvertObjectUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,13 +37,12 @@ public class ContractController {
 
         String s = "";
         int code = 0;
-        List<Transaction> list = new ArrayList<>();
-        list.add(new Transaction(senderId, receiverId, bpDescription));
+        Transaction t = new Transaction(senderId, receiverId, bpDescription);
         if (bpId == null || bpId.equals("")) {
             bpId = null;
         }
         try {
-            businessService.creatCooperate(senderId, receiverId, bpId, bpDescription, list);
+            businessService.creatCooperate(bpId, t);
             s = "发起合作成功";
         } catch (Exception e) {
             s = "发起合作失败";
@@ -58,7 +53,7 @@ public class ContractController {
         return response;
     }
 
-    @RequestMapping("/getWaitingCooperationRequest")
+    /*@RequestMapping("/getWaitingCooperationRequest")
     public IResponse getWaitingCooperationRequest(@RequestParam Integer userId) {
         //bpReceiverId为userId 并且 isComplete为waiting
         IResponse response;
@@ -69,55 +64,48 @@ public class ContractController {
         } else
             response = new IResponse(0, "查询结果为空");
         return response;
-    }
+    }*/
 
-    @RequestMapping("/getContractsByBPIdAndUserId")
+    @RequestMapping("/getWaitingTxsByBPIdAndUserId")
     public IResponse getContractsByBPIdAndUserId(@RequestParam Integer bpId, @RequestParam Integer userId) {
-        //用户点击"处理"获得某一流程下与其相关的未结束的合同
+        //用户点击"处理"获得某一流程下与其相关的需要处理的的tx
         IResponse response;
-        List<BPContract> bpContracts;
-        bpContracts = bpManageService.getContractsByBPIdAndUserId(bpId, userId);
-        if (bpContracts != null) {
-            response = new IResponse(0, bpContracts);
+        List<Transaction> transactionList;
+        transactionList = bpManageService.getWaitingTransactionsByBpIdAndUserId(bpId, userId);
+        if (transactionList != null) {
+            response = new IResponse(0, transactionList);
         } else
             response = new IResponse(0, "查询结果为空");
         return response;
     }
 
-    @RequestMapping("/getAllContractsByBPIdAndUserId")
+    @RequestMapping("/getAllTxsByBPIdAndUserId")
     public IResponse getAllContractsByBPIdAndUserId(@RequestParam Integer bpId, @RequestParam Integer userId) {
         //用户点击"处理"获得某一流程下与其相关的所有的合同
         IResponse response;
-        List<BPContract> bpContracts;
-        bpContracts = bpManageService.getAllContractsByBPIdAndUserId(bpId, userId);
-        if (bpContracts != null) {
-            response = new IResponse(0, bpContracts);
+        List<Transaction> transactionList;
+        transactionList = bpManageService.getAllTransactionsByBpIdAndUserId(bpId, userId);
+        if (transactionList != null) {
+            response = new IResponse(0, transactionList);
         } else
             response = new IResponse(0, "查询结果为空");
         return response;
     }
 
-    @RequestMapping("/getAllContractsPreByBPIdAndUserId")
+    @RequestMapping("/getAllTxsPreByBPIdAndUserId")
     public IResponse getAllContractsPreByBPIdAndUserId(@RequestParam Integer bpId, @RequestParam Integer userId) {
         //用户点击"处理"获得某一流程下与其相关的所有的合同
         IResponse response;
-        List<BPContract> bpContracts;
-        bpContracts = bpManageService.getAllContractsByBPIdAndUserId(bpId, userId);
-        List<ContractPre> contractPres = ConvertObjectUtil.convertContractToContractPre(bpContracts);
-        for (ContractPre contractPre : contractPres) {
-            String senderName = userManageService.getUserById(Integer.parseInt(contractPre.getBpSenderName())).getUsername();
-            String receiverName = userManageService.getUserById(Integer.parseInt(contractPre.getBpReceiverName())).getUsername();
-            contractPre.setBpSenderName(senderName);
-            contractPre.setBpReceiverName(receiverName);
-        }
-        if (contractPres != null) {
-            response = new IResponse(0, contractPres);
+        List<Transaction> transactionList;
+        transactionList = bpManageService.getAllTransactionsByBpIdAndUserId(bpId, userId);
+        if (transactionList != null) {
+            response = new IResponse(0, transactionList);
         } else
             response = new IResponse(0, "查询结果为空");
         return response;
     }
 
-    @RequestMapping("/processCooperationRequest")
+    /*@RequestMapping("/processCooperationRequest")
     public IResponse processCooperationRequest(@RequestParam Integer contractId, @RequestParam boolean processResult) {
         //bpReceiverId为userId 并且 isComplete为waiting
         IResponse response;
@@ -133,7 +121,7 @@ public class ContractController {
         }
         response = new IResponse(code, s);
         return response;
-    }
+    }*/
 
     @RequestMapping("/getBusinessProcessesByUserId")
     public IResponse getBusinessProcessesByUserId(@RequestParam Integer userId, @RequestParam String type) {
@@ -160,7 +148,7 @@ public class ContractController {
     }
 
     @RequestMapping("/processTxInCooperation")
-    public IResponse processTxInCooperation(@RequestParam Integer userId, Integer contractId, @RequestParam Integer transId) {
+    public IResponse processTxInCooperation(@RequestParam Integer userId, @RequestParam Integer transId) {
         IResponse response;
         String s;
         int code = 0;
