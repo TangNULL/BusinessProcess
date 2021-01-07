@@ -20,7 +20,7 @@
     </select>
 
     <select id="findUsersByBPId" resultType="User">
-        select * from user u where u.userid in (select bpSenderId from bpcontract c,businessprocess bp where c.contractId=bp.contractId and bp.bpId=#{businessProcessId}) or u.userid in (select bpReceiverId from bpcontract c,businessprocess bp where c.contractId=bp.contractId and bp.bpId=#{businessProcessId} and c.isReceiverAccepted=1);
+        select * from user u where u.userid in (select senderId from input_transaction inp where inp.bpId=#{businessProcessId}) or u.userid in (select receiverId from input_transaction inp where inp.bpId=#{businessProcessId});
     </select>
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userid" parameterType="User">

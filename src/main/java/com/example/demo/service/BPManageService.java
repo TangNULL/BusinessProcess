@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.BPContract;
 import com.example.demo.entity.BusinessProcess;
 import com.example.demo.entity.BusinessProcessPre;
 import com.example.demo.entity.Transaction;
@@ -24,15 +23,19 @@ public interface BPManageService {
     List<BusinessProcessPre> getBusinessProcessPreByUserIdAndType(String type, Integer userId);
 
 
-    List<BPContract> getWaitingContract(int userId);  //获得待处理的合作请求
+    //List<BPContract> getWaitingContract(int userId);  //获得待处理的合作请求
 
-    List<BPContract> getContractsByBPIdAndUserId(int bpId, int userId);  //获得某一流程下与某用户相关的未结束的合同
+    //List<BPContract> getContractsByBPIdAndUserId(int bpId, int userId);  //获得某一流程下与某用户相关的未结束的合同
 
-    List<BPContract> getAllContractsByBPIdAndUserId(int bpId, int userId);  //获得某一流程下与某用户相关的所有的合同
+    //List<BPContract> getAllContractsByBPIdAndUserId(int bpId, int userId);  //获得某一流程下与某用户相关的所有的合同
 
 
-    List<BPContract> getAllContractsByBPId(int bpId);  //处理业务流程时，需要根据流程id获得与登录用户相关的所有合约
+    //List<BPContract> getAllContractsByBPId(int bpId);  //处理业务流程时，需要根据流程id获得与登录用户相关的所有合约
 
     List<Transaction> getTransactionsByBpId(int bpId);   //获得业务流程包含的所有transaction
+
+    List<Transaction> getAllTransactionsByBpIdAndUserId(int bpId, int userId);
+
+    List<Transaction> getWaitingTransactionsByBpIdAndUserId(int bpId, int userId);
 
 }

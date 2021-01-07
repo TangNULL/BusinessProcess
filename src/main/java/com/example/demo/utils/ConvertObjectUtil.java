@@ -2,7 +2,6 @@ package com.example.demo.utils;
 
 import com.example.demo.entity.*;
 import com.example.demo.entity.LatestTransaction;
-import com.example.demo.mapper.UserMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -59,7 +58,7 @@ public class ConvertObjectUtil {
     }
 
 
-    public static List<ContractPre> convertContractToContractPre(List<BPContract> bpContractList) {
+    /*public static List<ContractPre> convertContractToContractPre(List<BPContract> bpContractList) {
         List<ContractPre> contractPres = new ArrayList<>();
         for (BPContract c : bpContractList) {
             List<String> txJsons = new ArrayList<>();
@@ -71,5 +70,7 @@ public class ConvertObjectUtil {
             contractPres.add(contractPre);
         }
         return contractPres;
-    }
+    }*/
+
+
 }

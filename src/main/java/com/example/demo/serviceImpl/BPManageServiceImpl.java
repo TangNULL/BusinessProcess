@@ -1,10 +1,9 @@
 package com.example.demo.serviceImpl;
 
-import com.example.demo.entity.BPContract;
 import com.example.demo.entity.BusinessProcess;
 import com.example.demo.entity.BusinessProcessPre;
 import com.example.demo.entity.Transaction;
-import com.example.demo.mapper.BPMapper;
+import com.example.demo.mapper.BlockMapper;
 import com.example.demo.service.BPManageService;
 import com.example.demo.utils.ConvertObjectUtil;
 import com.google.gson.Gson;
@@ -20,16 +19,16 @@ import java.util.List;
 public class BPManageServiceImpl implements BPManageService {
 
     @Autowired
-    BPMapper bpMapper;
+    BlockMapper blockMapper;
 
     @Override
     public BusinessProcess getLatestBusinessProcess() {
-        return bpMapper.findLatestBP();
+        return blockMapper.findLatestBP();
     }
 
     @Override
     public List<BusinessProcess> getBusinessProcessesByBlockId(int blockId) {
-        return bpMapper.findBPsByBlockId(blockId);
+        return blockMapper.findBPsByBlockId(blockId);
     }
 
     @Override
@@ -40,21 +39,9 @@ public class BPManageServiceImpl implements BPManageService {
         // unclosed:all基础上，bp的getAckUsers的size<流程参与人数        （弃用->存在一个合同 接收者未处理合作请求 或者（被对应receiver接受，并且至少一方没确认合同完成）
         // closed: all基础上，bp的getAckUsers的size=流程参与人数
         List<BusinessProcess> result = new ArrayList<>();
-        List<BusinessProcess> bps = new ArrayList<>();
-        List<Integer> bpIds = bpMapper.findAllBPIdsByUserId(userId);
-        for (Integer i : bpIds) {
-            BusinessProcess bp = bpMapper.findBPByBPId(i);
-            for (BPContract bpContract : bp.getBpContractList()) {
-                boolean a = bpContract.getReceiverAccepted() == null ? false : bpContract.getReceiverAccepted();
-                boolean b = bpContract.getReceiverAccepted() == null ? true : bpContract.getReceiverAccepted();
-                if ((bpContract.getBpReceiverId() == userId && a) || bpContract.getBpSenderId() == userId) {
-                    bps.add(bp);
-                    break;
-                }
-            }
-        }
+        List<BusinessProcess> bps = blockMapper.findAllBPsByUserId(userId);
         if (type.equals("all")) {
-            result.addAll(bps);
+            return bps;
         }
         if (type.equals("waiting")) {
             for (BusinessProcess bp : bps) {
@@ -70,43 +57,17 @@ public class BPManageServiceImpl implements BPManageService {
                     result.add(bp);
                 }
             }
-            /*for (BusinessProcess bp : bps) {
-                for (BPContract bpContract : bp.getBpContractList()) {
-                    boolean existTxNotBothAck = false;
-                    for (Transaction t : bpContract.getTransactionList()) {
-                        if (!t.getSenderAck() || !t.getReceiverAck()) {
-                            existTxNotBothAck = true;
-                            break;
-                        }
-                    }
-                    boolean c = bpContract.getReceiverAccepted() == null ? false : bpContract.getReceiverAccepted();
-                    boolean d = bpContract.getReceiverAccepted() == null ? true : bpContract.getReceiverAccepted();
-                    if ((bpContract.getBpReceiverId() == userId && c && existTxNotBothAck) || (bpContract.getBpSenderId() == userId && d && existTxNotBothAck)) {
-                        result.add(bp);
-                        break;
-                    }
-                }
-            }*/
         }
         if (type.equals("unclosed")) {
             for (BusinessProcess bp : bps) {
-                Gson gson = new Gson();
-                Type type1 = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                List<String> userIdlist = gson.fromJson(bp.getAckUsers(), type1);
-                if (userIdlist.size() < bp.getUserList().size()) {
+                if (bp.getCompleteTime() == null) {
                     result.add(bp);
                 }
             }
         }
-
         if (type.equals("closed")) {
             for (BusinessProcess bp : bps) {
-                Gson gson = new Gson();
-                Type type1 = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                List<String> userIdlist = gson.fromJson(bp.getAckUsers(), type1);
-                if (userIdlist.size() == bp.getUserList().size()) {
+                if (bp.getCompleteTime() != null) {
                     result.add(bp);
                 }
             }
@@ -121,7 +82,7 @@ public class BPManageServiceImpl implements BPManageService {
         return businessProcessPres;
     }
 
-    @Override
+    /*@Override
     public List<BPContract> getWaitingContract(int userId) {
         return bpMapper.findWaitingBPContractsByUserId(userId);
     }
@@ -163,19 +124,21 @@ public class BPManageServiceImpl implements BPManageService {
     public List<BPContract> getAllContractsByBPId(int bpId) {
         return bpMapper.findBPContractsByBPId(bpId);
     }
-
+*/
     @Override
     public List<Transaction> getTransactionsByBpId(int bpId) {
-        List<Transaction> transactionList = new ArrayList<>();
-        BusinessProcess bp = bpMapper.findBPByBPId(bpId);
-        if (bp != null) {
-            for (BPContract contract : bp.getBpContractList()) {
-                for (Transaction t : contract.getTransactionList()) {
-                    transactionList.add(new Transaction(t));
-                }
-            }
-        }
-        return transactionList;
+        return blockMapper.findTxsByBPId(bpId);
+    }
+
+    @Override
+    public List<Transaction> getAllTransactionsByBpIdAndUserId(int bpId, int userId) {
+        //获得与用户相关的所有tx
+        return blockMapper.findAllTxsByUserIdAndBpId(userId, bpId);
+    }
+
+    @Override
+    public List<Transaction> getWaitingTransactionsByBpIdAndUserId(int bpId, int userId) {
+        return blockMapper.findWaitingTxsByUserIdAndBpId(userId, bpId);
     }
 
 

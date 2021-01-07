@@ -1,10 +1,8 @@
 package com.example.demo.serviceImpl;
 
-import com.example.demo.entity.BPContract;
 import com.example.demo.entity.BusinessProcess;
 import com.example.demo.entity.Transaction;
-import com.example.demo.mapper.BPMapper;
-import com.example.demo.mapper.BusinessMapper;
+import com.example.demo.mapper.BlockMapper;
 import com.example.demo.service.ConsortiumBlockchainService;
 import com.example.demo.service.BusinessService;
 import com.google.gson.Gson;
@@ -20,35 +18,27 @@ import java.util.List;
 @Service
 public class BusinessServiceImpl implements BusinessService {
     @Autowired
-    BusinessMapper businessMapper;
-
-    @Autowired
-    BPMapper bpMapper;
+    BlockMapper blockMapper;
 
     @Autowired
     ConsortiumBlockchainService consortiumBlockchainService;
 
     @Override
-    public void creatCooperate(Integer senderId, Integer receiverId, Integer bpId, String BPDescription, List<Transaction> transactions) {
+    public void creatCooperate(Integer bpId, Transaction tx) {
         int businessProcesssId;
         BusinessProcess bp = new BusinessProcess();
         if (bpId == null) { //需要新建流程
-            businessMapper.insertBPDescription(bp);
+            blockMapper.insertBPDescription(bp);
             businessProcesssId = bp.getBpId();
         } else {
             businessProcesssId = bpId;
         }
-
-        for (Transaction t : transactions) {
-            t.setBpId(businessProcesssId);
-        }
+        tx.setBpId(businessProcesssId);
+        tx.setSenderAck(true);
         //协作业务流程发起者申请联盟链
-        if (consortiumBlockchainService.downloadPhase(transactions.get(0))) {
-            BPContract bpContract = new BPContract(senderId, receiverId, BPDescription);
-            businessMapper.insertContract(bpContract);
-            businessMapper.insertBusinessProcess(businessProcesssId, bpContract.getContractId());
-            businessMapper.batchInsertTransactions(transactions);
-            businessMapper.batchInsertCooperation(bpContract.getContractId(), transactions);
+        if (consortiumBlockchainService.downloadPhase(tx)) {
+            blockMapper.insertTransaction_output(tx);
+            blockMapper.insertTransaction_input(tx);
         } else {
             System.out.println("该用户不存在，请先实名注册！");
         }
@@ -59,85 +49,57 @@ public class BusinessServiceImpl implements BusinessService {
 
     }*/
 
-    @Override
+    //"默认接收合作"
+    /*@Override
     public void processCooperationRequest(int contractId, boolean cooperationResponse) {
         BPContract bpContract = new BPContract();
         bpContract.setContractId(contractId);
         bpContract.setReceiverAccepted(cooperationResponse);
         bpMapper.updateBPContract(bpContract);
-    }
+    }*/
 
     @Override
     public String confirmBusinessProcessCompletion(Integer userId, int bpId) {
-        BusinessProcess businessProcess = bpMapper.findBPByBPId(bpId);
-        String result = "";
-        boolean existTxNotComplete = false;
-        for (BPContract contract : businessProcess.getBpContractList()) {
-            if (contract.getBpSenderId().equals(userId) || contract.getBpReceiverId().equals(userId)) {
-                if (contract.getReceiverAccepted() == null) {
-                    result = "有一个关于您的合同还没被userId:" + contract.getBpReceiverId() + "处理";
-                    break;
-                } else if (contract.getReceiverAccepted()) {
-                    for (Transaction t : contract.getTransactionList()) {
-                        if (t.getSenderId().equals(userId) || t.getReceiverId().equals(userId)) {
-                            if (!t.getReceiverAck() || !t.getSenderAck()) {
-                                existTxNotComplete = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (existTxNotComplete) {
-                        result = "还有交易未完成";
-                        break;
-                    }
-                }
-
-            }
-
+        List<Transaction> txs = blockMapper.findWaitingTxsByUserIdAndBpId(userId, bpId);
+        if (txs != null && txs.size() > 0) {
+            return "还有交易未完成";
         }
-        if (!result.equals("")) {
-            return result;
-        } else {
-            Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            List<String> list = gson.fromJson(businessProcess.getAckUsers(), type);
-            List<Integer> userIdlist = new ArrayList<>();
-            for (String s : list) {
-                userIdlist.add(Integer.parseInt(s));
-            }
-            userIdlist.add(userId);
-            if (userIdlist.size() == businessProcess.getUserList().size()) {
-                Timestamp comTime = new Timestamp(System.currentTimeMillis());
-                businessProcess.setCompleteTime(comTime);
-                //TODO 合作结束上传协作数据
+        BusinessProcess businessProcess = blockMapper.findBPByBPId(bpId);
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
+        List<String> list = gson.fromJson(businessProcess.getAckUsers(), type);
+        List<Integer> userIdlist = new ArrayList<>();
+        for (String s : list) {
+            userIdlist.add(Integer.parseInt(s));
+        }
+        userIdlist.add(userId);
+        if (userIdlist.size() == businessProcess.getUserList().size()) {
+            Timestamp comTime = new Timestamp(System.currentTimeMillis());
+            businessProcess.setCompleteTime(comTime);
+            //TODO 合作结束上传协作数据
 
 //                if(consortiumBlockchainService.generatePhase()){
 //
 //                }
 
 
-            }
-            businessProcess.setAckUsers(gson.toJson(userIdlist));
-            bpMapper.updateBP(businessProcess);
-            return result;
         }
+        businessProcess.setAckUsers(gson.toJson(userIdlist));
+        blockMapper.updateBP(businessProcess);
+        return "";
+
     }
 
     @Override
     public void processTxInCooperation(Integer userId, int transId) {
-        Transaction t = bpMapper.findTransactionByTranId(transId);
-        if (t.getReceiverAck() || t.getSenderAck()) {
-            //加上这一个确认 这笔交易完成了
-            Timestamp comTime = new Timestamp(System.currentTimeMillis());
-            t.setCompleteTime(comTime);
-            t.setHash();
-        }
-        if (userId.equals(t.getSenderId())) {
-            t.setSenderAck(true);
-        } else if (userId.equals(t.getReceiverId()))
-            t.setReceiverAck(true);
-        bpMapper.updateTransaction(t);
-
+        //只处理自己接受的任务，意味着这笔tx也完成了，不需要再判断sender了
+        Transaction t = blockMapper.findTransactionByTranId(transId);
+        t.setReceiverAck(true);
+        Timestamp comTime = new Timestamp(System.currentTimeMillis());
+        t.setCompleteTime(comTime);
+        t.setHash();
+        blockMapper.updateTransaction_input(t);
+        blockMapper.updateTransaction_output(t);
     }
 }
