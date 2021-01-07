@@ -22,7 +22,8 @@ public class LocalCooperation {
 
     public LocalCooperation() {
         this.localConsortiumChain = new HashMap<>();
-        this.localTxcBP = new HashMap<>();
+
+//        this.localTxcBP = new HashMap<>();
     }
 
     public Map<Integer, ConsortiumBlock> getLocalConsortiumChain() {

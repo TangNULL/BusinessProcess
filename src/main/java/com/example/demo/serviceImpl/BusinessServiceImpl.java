@@ -36,12 +36,27 @@ public class BusinessServiceImpl implements BusinessService {
         tx.setBpId(businessProcesssId);
         tx.setSenderAck(true);
         //协作业务流程发起者申请联盟链
-        if (consortiumBlockchainService.downloadPhase(tx)) {
+        if (tx.getTransId().equals(1)) {
             blockMapper.insertTransaction_output(tx);
-            blockMapper.insertTransaction_input(tx);
+            try {
+                if(consortiumBlockchainService.downloadPhase(tx)) {
+                    System.out.println("发起合作成功！");
+                }
+            } catch (Exception e) {
+                System.out.println("该用户不存在，请先实名注册！");
+            }
         } else {
-            System.out.println("该用户不存在，请先实名注册！");
+            //协作业务流程响应其他人的任务
+            blockMapper.insertTransaction_output(tx);
+            try {
+                if(consortiumBlockchainService.generatePhase(tx)) {
+                    System.out.println("发起合作成功！");
+                }
+            } catch (Exception e) {
+                System.out.println("该用户不存在，请先实名注册！");
+            }
         }
+
     }
 
     /*@Override

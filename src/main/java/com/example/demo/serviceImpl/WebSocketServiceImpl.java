@@ -29,6 +29,9 @@ public class WebSocketServiceImpl implements WebSocketService, ApplicationRunner
     LocalPublicBlockchain localPublicBlockchain;
 
     @Autowired
+    LocalCooperation localCooperation;
+
+    @Autowired
     NodeServer nodeServer;
 
     @Autowired
@@ -137,9 +140,9 @@ public class WebSocketServiceImpl implements WebSocketService, ApplicationRunner
 
         //设置种子用户
         List<User> userList = new ArrayList<>();
-        userList.add(new User("u1", "123456", "u1", "des", "core", "ass"));
-        userList.add(new User("u2", "123456", "u1", "des", "core", "ass"));
-        userList.add(new User("u3", "123456", "u1", "des", "core", "ass"));
+        userList.add(new User(1,"u1", "u1", "des", "core", "ass"));
+        userList.add(new User(2,"u2", "u1", "des", "core", "ass"));
+        userList.add(new User(3,"u3", "u1", "des", "core", "ass"));
         localPublicBlockchain.setUsers(userList);
 
         System.out.println("节点地址: "+localPublicBlockchain.getAddress());

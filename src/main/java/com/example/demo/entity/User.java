@@ -13,9 +13,15 @@ public class User {
     public User(Integer userid) {
         this.userid = userid;
     }
-    public User(Integer userid, String ipAddress) {
+    //password是不会在别人的数据库中显示的
+    //对外显示的全局表，不包含用户的秘密
+    public User(Integer userid, String username, String identity, String description, String coreBusiness, String assessment) {
         this.userid = userid;
-        this.ipAddress = ipAddress;
+        this.username = username;
+        this.identity = identity;
+        this.description = description;
+        this.coreBusiness = coreBusiness;
+        this.assessment = assessment;
     }
 
     public User(Integer userid, String username, String password, String identity, String description, String coreBusiness, String assessment) {
