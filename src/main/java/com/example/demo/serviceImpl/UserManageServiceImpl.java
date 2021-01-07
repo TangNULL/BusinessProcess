@@ -1,5 +1,6 @@
 package com.example.demo.serviceImpl;
 
+import com.example.demo.entity.LocalUser;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserManageService;
@@ -15,7 +16,7 @@ public class UserManageServiceImpl implements UserManageService {
     UserMapper userMapper;
 
     @Override
-    public User getUserByIdentity(String identity) {
+    public LocalUser getUserByIdentity(String identity) {
         return userMapper.findUserByIdentity(identity);
     }
 
@@ -26,7 +27,8 @@ public class UserManageServiceImpl implements UserManageService {
 
     @Override
     public boolean addUser(String username, String password, String identity, String description, String coreBusiness, String assessment) {
-        User u = new User(username, password, identity, description, coreBusiness, assessment);
+
+        LocalUser u = new LocalUser(username, password, identity, description, coreBusiness, assessment);
         Integer userid = userMapper.insertUser(u);
         return userid != null && userid > 0;
     }

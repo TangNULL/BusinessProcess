@@ -31,6 +31,14 @@
         select * from bpDescription bp where bp.completeTime is not null;
     </select>-->
 
+    <select id="findAllInputTxs" resultType="Transaction">
+        select * from input_transaction;
+    </select>
+
+    <select id="findAllOutputTxs" resultType="Transaction">
+        select * from output_transaction;
+    </select>
+
     <select id="findTransactionByTranId" resultType="Transaction">
         select * from input_transaction where transId=#{transId};
     </select>
@@ -57,13 +65,13 @@
     <insert id="insertTransaction_input" parameterType="Transaction">
          insert into input_transaction (bpId,transId,senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
          values
-     (#{bpId},#{transId},#{senderId},#{receiverId},now(),#{tranDescription},true,false)
+     (#{bpId},#{transId},#{senderId},#{receiverId},#{createTime},#{tranDescription},true,false)
      </insert>
 
     <insert id="insertTransaction_output" useGeneratedKeys="true" keyProperty="transId" parameterType="Transaction">
-         insert into output_transaction (bpId,senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
+         insert into output_transaction (bpId,transId,senderId,receiverId,createTime,tranDescription,isSenderAck,isReceiverAck)
          values
-     (#{bpId},#{senderId},#{receiverId},now(),#{tranDescription},true,false)
+     (#{bpId},#{transId},#{senderId},#{receiverId},now(),#{tranDescription},true,false)
      </insert>
 
 
@@ -118,6 +126,5 @@
         </collection>
 
     </resultMap>
-
 
 </mapper>

@@ -47,4 +47,7 @@ public interface BlockMapper {
     void updateTransaction_input(Transaction transaction);
 
     void updateTransaction_output(Transaction transaction);
+
+    List<Transaction> findAllInputTxs();
+    List<Transaction> findAllOutputTxs();
 }

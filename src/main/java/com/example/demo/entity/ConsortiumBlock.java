@@ -7,6 +7,7 @@ import java.util.*;
 public class ConsortiumBlock {
     private String pkHash;  //用户私钥的哈希值
     private int bpId;  //标识唯一流程实例
+    private int localUserId;  //本地用户是谁
     private Map<Integer, Transaction> inputTxs;  //本地节点保存的接收到的协作请求，Map<txId, inputTx>
     private Map<Integer, Transaction> outputTxs;  //本地节点上保存的发出的协作请求，Map<txId, outputTx>
     private Map<Integer, List<Integer>> inputs2Outputs;  //本地节点的协作对应关系，Map<inputTxId, List<outputTxId>> 为了响应哪个tx的协作请求
@@ -17,6 +18,7 @@ public class ConsortiumBlock {
     private Map<Integer, List<Integer>> finishedTxs;  //当前任务哪些后续任务完成了，Map<inputTxId, List<outputTxId>>
     private Map<Integer, List<String>> uploadData;  //当前节点上需要上传的前置事件对应的后续事件的处理结果，Map<inputTxId, List<EncryptTx>>
 
+    //新的区块初始化
     public ConsortiumBlock(int bpId) {
         this.bpId = bpId;
         this.inputTxs = new HashMap<>();
@@ -28,7 +30,30 @@ public class ConsortiumBlock {
         this.finishedTxsCount = new HashMap<>();
         this.finishedTxs = new HashMap<>();
         this.uploadData = new HashMap<>();
+    }
 
+    //同步已有的区块数据
+    public ConsortiumBlock(int bpId, int userId, List<Transaction> txsList) {
+        this.bpId = bpId;
+        this.localUserId = userId;
+        this.inputTxs = new HashMap<>();
+        this.outputTxs = new HashMap<>();
+        this.inputs2Outputs = new HashMap<>();
+        this.outputs2Inputs = new HashMap<>();
+        this.inputUsers = new HashMap<>();
+        this.outputUsers = new HashMap<>();
+        this.finishedTxsCount = new HashMap<>();
+        this.finishedTxs = new HashMap<>();
+        this.uploadData = new HashMap<>();
+
+        for (Transaction tx : txsList) {
+            if (tx.getReceiverId().equals(userId)) {
+                this.inputTxs.put(tx.getTransId(), tx);
+            }
+            if (tx.getSenderId().equals(userId)) {
+                this.outputTxs.put(tx.getTransId(), tx);
+            }
+        }
     }
 
     public String getPkHash() {

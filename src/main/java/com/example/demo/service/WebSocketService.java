@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.User;
 import org.java_websocket.WebSocket;
 
 import java.util.List;

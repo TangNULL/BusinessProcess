@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.*;
+import com.example.demo.mapper.BlockMapper;
 import com.example.demo.service.UserManageService;
 import com.example.demo.service.WebSocketService;
 import com.example.demo.utils.NetworkUtil;
@@ -22,13 +23,23 @@ public class UserController {
     @Autowired
     WebSocketService webSocketService;
 
+    @Autowired
+    LocalCooperation localCooperation;
+
+    @Autowired
+    BlockMapper blockMapper;
+
     @RequestMapping("/login")
     @ResponseBody
     public IResponse login(@RequestParam String identity, @RequestParam String password) {
         IResponse response;
-        User u = userManageService.getUserByIdentity(identity);
+        LocalUser u = userManageService.getUserByIdentity(identity);
         if (u != null && u.getPassword().equals(password)) {
             response = new IResponse(0, u);
+            //设置本地用户
+            localCooperation.setLocalUser(u);
+            //设置本地节点隐私数据
+            localCooperation.init(blockMapper.findAllInputTxs(), blockMapper.findAllOutputTxs());
         } else
             response = new IResponse(1, "用户名或密码不正确");
         return response;
