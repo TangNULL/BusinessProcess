@@ -5,6 +5,7 @@ import com.example.demo.entity.LocalCooperation;
 import com.example.demo.entity.LocalPublicBlockchain;
 import com.example.demo.entity.NetworkMsg;
 import com.example.demo.entity.User;
+import com.example.demo.mapper.BlockMapper;
 import com.example.demo.service.*;
 import com.example.demo.utils.NetworkUtil;
 import com.example.demo.utils.BlockchainUtil;
@@ -42,6 +43,9 @@ public class WebSocketServiceImpl implements WebSocketService, ApplicationRunner
 
     @Autowired
     ConsortiumBlockchainService consortiumBlockchainService;
+
+    @Autowired
+    BlockMapper blockMapper;
 
     @Override
     public void write(WebSocket ws, String msg) {

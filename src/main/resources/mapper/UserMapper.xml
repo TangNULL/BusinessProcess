@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.UserMapper">
-    <select id="findUserByIdentity" resultType="User">
-        select * from user where identity = #{identity};
+    <select id="findUserByIdentity" resultType="LocalUser">
+        select * from private_user where identity = #{identity};
     </select>
 
     <select id="findUserById" resultType="User">
@@ -24,7 +24,7 @@
     </select>
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userid" parameterType="User">
-         insert into user (
+         insert into private_user (
     username,
     password,
     identity,
@@ -39,4 +39,5 @@
     #{coreBusiness},
     #{assessment})
     </insert>
+
 </mapper>

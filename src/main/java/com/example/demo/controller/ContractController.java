@@ -42,7 +42,7 @@ public class ContractController {
             bpId = null;
         }
         try {
-            businessService.creatCooperate(bpId, t);
+            businessService.creatCooperate(bpId, t, 0);
             s = "发起合作成功";
         } catch (Exception e) {
             s = "发起合作失败";

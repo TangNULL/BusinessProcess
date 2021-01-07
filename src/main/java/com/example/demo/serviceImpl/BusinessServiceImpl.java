@@ -24,7 +24,7 @@ public class BusinessServiceImpl implements BusinessService {
     ConsortiumBlockchainService consortiumBlockchainService;
 
     @Override
-    public void creatCooperate(Integer bpId, Transaction tx) {
+    public void creatCooperate(Integer bpId, Transaction tx, Integer lastTxId) {
         int businessProcesssId;
         BusinessProcess bp = new BusinessProcess();
         if (bpId == null) { //需要新建流程
@@ -35,9 +35,10 @@ public class BusinessServiceImpl implements BusinessService {
         }
         tx.setBpId(businessProcesssId);
         tx.setSenderAck(true);
+        tx.setTransId(lastTxId + 1);
+        blockMapper.insertTransaction_output(tx);
         //协作业务流程发起者申请联盟链
         if (tx.getTransId().equals(1)) {
-            blockMapper.insertTransaction_output(tx);
             try {
                 if(consortiumBlockchainService.downloadPhase(tx)) {
                     System.out.println("发起合作成功！");
@@ -47,7 +48,6 @@ public class BusinessServiceImpl implements BusinessService {
             }
         } else {
             //协作业务流程响应其他人的任务
-            blockMapper.insertTransaction_output(tx);
             try {
                 if(consortiumBlockchainService.generatePhase(tx)) {
                     System.out.println("发起合作成功！");
