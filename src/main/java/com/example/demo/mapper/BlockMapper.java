@@ -22,11 +22,17 @@ public interface BlockMapper {
 
     //List<BusinessProcess> findClosedBPsByUserId(int userId);//注意加distinct
 
-    Transaction findTransactionByTranId(int tranId);
+    Transaction findTransactionInInputByTranId(int tranId);
 
-    List<Transaction> findTxsByBPId(int businessProcessId);
+    Transaction findTransactionInOutputByTranId(int tranId);
 
-    List<Transaction> findAllTxsByUserIdAndBpId(int userId, int bpId);
+    List<Transaction> findAllInputTxsByBPId(int businessProcessId);
+
+    List<Transaction> findAllOutputTxsByBPId(int businessProcessId);
+
+    //List<Transaction> findAllInputTxsByUserIdAndBpId(int userId, int bpId);
+
+    //List<Transaction> findAllOutputTxsByUserIdAndBpId(int userId, int bpId);
 
     List<Transaction> findWaitingTxsByUserIdAndBpId(int userId, int bpId);
 
@@ -49,5 +55,6 @@ public interface BlockMapper {
     void updateTransaction_output(Transaction transaction);
 
     List<Transaction> findAllInputTxs();
+
     List<Transaction> findAllOutputTxs();
 }

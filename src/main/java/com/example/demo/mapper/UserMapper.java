@@ -19,6 +19,7 @@ public interface UserMapper {
 
     List<User> findUserLike(String s);
 
+    //TODO 这里找到的只是与本地用户相关的user，并不是bp涉及的所有user
     List<User> findUsersByBPId(int businessProcessId);
 
 }

@@ -40,7 +40,7 @@ public class BusinessServiceImpl implements BusinessService {
         //协作业务流程发起者申请联盟链
         if (tx.getTransId().equals(1)) {
             try {
-                if(consortiumBlockchainService.downloadPhase(tx)) {
+                if (consortiumBlockchainService.downloadPhase(tx)) {
                     System.out.println("发起合作成功！");
                 }
             } catch (Exception e) {
@@ -49,7 +49,7 @@ public class BusinessServiceImpl implements BusinessService {
         } else {
             //协作业务流程响应其他人的任务
             try {
-                if(consortiumBlockchainService.generatePhase(tx)) {
+                if (consortiumBlockchainService.generatePhase(tx)) {
                     System.out.println("发起合作成功！");
                 }
             } catch (Exception e) {
@@ -109,12 +109,11 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public void processTxInCooperation(Integer userId, int transId) {
         //只处理自己接受的任务，意味着这笔tx也完成了，不需要再判断sender了
-        Transaction t = blockMapper.findTransactionByTranId(transId);
+        Transaction t = blockMapper.findTransactionInInputByTranId(transId);
         t.setReceiverAck(true);
         Timestamp comTime = new Timestamp(System.currentTimeMillis());
         t.setCompleteTime(comTime);
         t.setHash();
         blockMapper.updateTransaction_input(t);
-        blockMapper.updateTransaction_output(t);
     }
 }

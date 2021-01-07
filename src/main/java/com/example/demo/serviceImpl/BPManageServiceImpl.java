@@ -127,13 +127,20 @@ public class BPManageServiceImpl implements BPManageService {
 */
     @Override
     public List<Transaction> getTransactionsByBpId(int bpId) {
-        return blockMapper.findTxsByBPId(bpId);
+        //TODO 这里的bp只包含了本地用户相关的tx
+        List<Transaction> list = new ArrayList<>();
+        list.addAll(blockMapper.findAllInputTxsByBPId(bpId));
+        list.addAll(blockMapper.findAllOutputTxsByBPId(bpId));
+        return list;
     }
 
     @Override
     public List<Transaction> getAllTransactionsByBpIdAndUserId(int bpId, int userId) {
         //获得与用户相关的所有tx
-        return blockMapper.findAllTxsByUserIdAndBpId(userId, bpId);
+        List<Transaction> list = new ArrayList<>();
+        list.addAll(blockMapper.findAllInputTxsByBPId(bpId));
+        list.addAll(blockMapper.findAllOutputTxsByBPId(bpId));
+        return list;
     }
 
     @Override

@@ -16,7 +16,7 @@
     </select>
 
     <select id="findAllBPsByUserId" resultMap="BusinessProcessMap1">
-        select * from bpDescription bp where bp.bpId in (select bpId from input_transaction intran where intran.senderId=#{userId} or intran.receiverId=#{userId});
+        select * from bpDescription bp where bp.bpId in (select bpId from input_transaction) or bp.bpId in (select bpId from output_transaction);
     </select>
 
     <!--<select id="findWaitingBPsByUserId" resultMap="BusinessProcessMap1">
@@ -39,20 +39,36 @@
         select * from output_transaction;
     </select>
 
-    <select id="findTransactionByTranId" resultType="Transaction">
+    <select id="findTransactionInInputByTranId" resultType="Transaction">
         select * from input_transaction where transId=#{transId};
     </select>
 
-    <select id="findTxsByBPId" resultType="Transaction">
+    <select id="findTransactionInOutputByTranId" resultType="Transaction">
+        select * from output_transaction where transId=#{transId};
+    </select>
+
+    <select id="findAllInputTxsByBPId" resultType="Transaction">
         select * from input_transaction where bpId=#{businessProcessId};
     </select>
 
-    <select id="findAllTxsByUserIdAndBpId" resultType="Transaction">
-        select * from input_transaction where bpId=#{bpId} and (senderId=#{userId} or receiverId=#{userId});
+    <select id="findAllOutputTxsByBPId" resultType="Transaction">
+        select * from output_transaction where bpId=#{businessProcessId};
+    </select>
+
+    <select id="findAllInputTxsByUserIdAndBpId" resultType="Transaction">
+        select * from input_transaction where bpId=#{bpId} and  receiverId=#{userId};
+    </select>
+
+    <select id="findAllOutputTxsByUserIdAndBpId" resultType="Transaction">
+        select * from output_transaction where bpId=#{bpId} and  senderId=#{userId};
     </select>
 
     <select id="findWaitingTxsByUserIdAndBpId" resultType="Transaction">
-        select * from input_transaction where bpId=#{bpId} and receiverId=#{userId} and isReceiverAck=false;
+        select * from input_transaction where bpId=#{bpId} and isReceiverAck=false;
+    </select>
+
+    <select id="findTxsByBPId" resultType="Transaction">
+         select * from input_transaction union all select * from output_transaction;
     </select>
 
 
