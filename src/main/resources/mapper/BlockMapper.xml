@@ -68,7 +68,7 @@
     </select>
 
     <select id="findTxsByBPId" resultType="Transaction">
-         select * from input_transaction union all select * from output_transaction;
+         select * from input_transaction a where a.bpId=#{businessProcessId} union all select * from output_transaction b where b.bpId=#{businessProcessId};
     </select>
 
 

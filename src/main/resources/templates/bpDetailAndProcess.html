@@ -213,8 +213,8 @@
                     var conType = "<div class=\"panel panel-primary\">\n"
                     var conshtml = "<div class=\"col-lg-12\">\n" +
                         conType +
-                        "                    <div class=\"panel-heading\">\n" +
-                        "                        contractId：" + x.transId + "\n" +
+                        "                    <div txId=\"" + x.transId + "\" class=\"txIdClass panel-heading\">\n" +
+                        "                        TxId：" + x.transId + "\n" +
                         "                    </div>\n" +
                         "                    <div class=\"panel-body\">\n" +
                         "                        <p>发起人Id：" + x.senderId + "</p>\n" +
@@ -273,6 +273,8 @@
         var txsJson = $("#txsJson").val()
         //var bpDescription = $("#bpDescription").val()
         var txDescription = $("#bpDescription").val()
+        var eles = document.getElementsByClassName("txIdClass")
+        var lastTxId = eles[eles.length - 1].getAttribute("txId");
         $.ajax({
             type: "POST",
             url: "/cooperate",
@@ -281,7 +283,8 @@
                 receiverId: receiverId,
                 bpDescription: txDescription,
                 bpId: bpId,
-                transactionList: txsJson
+                //transactionList: txsJson,
+                preTransId: lastTxId
             },
             dataType: "json",
             success: function (respMsg) {

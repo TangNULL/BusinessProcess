@@ -24,7 +24,7 @@ public class ContractController {
     UserManageService userManageService;
 
     @RequestMapping("/cooperate")
-    public IResponse creatCooperate(@RequestParam Integer senderId, @RequestParam Integer receiverId, @RequestParam Integer bpId, @RequestParam String bpDescription, @RequestParam String transactionList) {
+    public IResponse creatCooperate(@RequestParam Integer senderId, @RequestParam Integer receiverId, @RequestParam Integer bpId, @RequestParam String bpDescription, @RequestParam Integer preTransId) {
         IResponse response = null;
         //把交易的json解析出来
         //transactionList = "[{senderId:3,receiverId:4,tranDescription:交易内容}]";
