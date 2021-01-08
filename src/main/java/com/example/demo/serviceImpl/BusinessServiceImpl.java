@@ -115,5 +115,22 @@ public class BusinessServiceImpl implements BusinessService {
         t.setCompleteTime(comTime);
         t.setHash();
         blockMapper.updateTransaction_input(t);
+
+        //通过看所有接收者是否都ack 判断流程是否结束
+        int bpId = t.getBpId();
+        BusinessProcess bp = blockMapper.findBPByBPId(bpId);
+        boolean allOver = true;
+        //TODO: 这里需要查所有的tx，而不是只有本地的
+        for (Transaction transaction : bp.getTxList()) {
+            if (!transaction.getReceiverAck()) {
+                allOver = false;
+                break;
+            }
+        }
+        if (allOver) {
+            Timestamp comTime2 = new Timestamp(System.currentTimeMillis());
+            bp.setCompleteTime(comTime2);
+            blockMapper.updateBP(bp);
+        }
     }
 }
