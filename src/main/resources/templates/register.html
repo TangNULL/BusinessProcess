@@ -152,21 +152,21 @@
                     <div class="heading">Register</div>
                     <div class="form-group">
                         <i class="fa fa-user"></i><input required="" name="userName" type="text"
-                                                         class="form-control" placeholder="企业全称/个人姓名"
+                                                         class="form-control" placeholder="Username"
                                                          id="userName">
                     </div>
                     <div class="form-group">
                         <i class="fa fa-user"></i><input required="" name="identity" type="text"
-                                                         class="form-control" placeholder="身份证明凭证"
+                                                         class="form-control" placeholder="Identification"
                                                          id="identity">
                     </div>
                     <div class="form-group">
                         <i class="fa fa-lock"></i><input required="" name="password" id="password" type="password"
-                                                         class="form-control" placeholder="密码">
+                                                         class="form-control" placeholder="Password">
                     </div>
                     <div class="form-group">
                         <i class="fa fa-lock"></i><input required="" name="password" id="passwordAck" type="password"
-                                                         class="form-control" placeholder="确认密码">
+                                                         class="form-control" placeholder="Confirm password">
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-default" onclick="register()"><i
@@ -182,7 +182,7 @@
 <script>
     function register() {
         if ($("#password").val() != $("#passwordAck").val()) {
-            alert("密码不一致，请重新输入")
+            alert("The password is inconsistent, please re-enter")
             return
         }
         $.ajax({
@@ -193,7 +193,7 @@
             success: function (respMsg) {
                 console.log(respMsg)
                 if (respMsg.code == 0) {
-                    alert("注册成功！")
+                    alert("Register successfully!")
                     window.location.href = "/publicChain?identity=" + $("#identity").val() + "&userId=" + respMsg.data.userid;
                 } else {
                     alert(respMsg.data)

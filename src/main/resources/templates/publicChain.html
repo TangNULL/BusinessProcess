@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>公有链</title>
+    <title>Public Chain</title>
 
     <!-- Core CSS - Include with every page -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -37,14 +37,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">交易系统</a>
+            <a class="navbar-brand" href="/">Trading System</a>
         </div>
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
             <!-- /.dropdown -->
             <li class="dropdown">
-                <a class="dropdown-toggle" id="pcSupervisionBtn" href="/pcSupervision">公有链监管</a>
+                <a class="dropdown-toggle" id="pcSupervisionBtn" href="/pcSupervision">Public Chain Supervision</a>
             </li>
 
             <li class="dropdown">
@@ -68,10 +68,10 @@
                 <ul class="nav" id="side-menu">
 
                     <li>
-                        <a id="publicChainBtn" href="/publicChain"><i class="fa fa-dashboard fa-fw"></i> 公有链</a>
+                        <a id="publicChainBtn" href="/publicChain"><i class="fa fa-dashboard fa-fw"></i> Public Chain</a>
                     </li>
                     <li>
-                        <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> 我的联盟链</a>
+                        <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> Consortium Chain</a>
                     </li>
                    <!-- <li>
                         <a id="bpRecordBtn" href="/bpRecord"><i class="fa fa-edit fa-fw"></i> 我的流程记录</a>
@@ -116,15 +116,15 @@
 
             <div class="col-lg-12">
                 <table class="table table-bordered" style='table-layout:fixed;'>
-                    <caption>最新的业务流程</caption>
+                    <caption>Latest Business Process</caption>
                     <thead>
                     <tr>
-                        <th>trace_id</th>
-                        <th>activity_name</th>
-                        <th>哈希值</th>
-                        <th>合作发起方</th>
-                        <th>合作接收方</th>
-                        <th>合作时长</th>
+                        <th>Trace_id</th>
+                        <th>Activity_name</th>
+                        <th>Hash</th>
+                        <th>BpSender</th>
+                        <th>BpReceiver</th>
+                        <th>CooperationTime</th>
                     </tr>
                     </thead>
                     <tbody id="latestTx">
@@ -134,11 +134,11 @@
 
             <div class="col-lg-6">
                 <table class="table table-bordered" style='table-layout:fixed;'>
-                    <caption>企业/个人列表</caption>
+                    <caption>UserList</caption>
                     <thead>
                     <tr>
-                        <th>企业全称/个人姓名</th>
-                        <th>企业简述</th>
+                        <th>Username</th>
+                        <th>Brief Introduction</th>
                         <!--  <th>企业核心业务</th>
                           <th>企业资产评估</th>-->
                     </tr>
@@ -157,7 +157,7 @@
                     <p id="userdetailassessment" style="margin: 20px"></p>
                 </div>-->
                 <button class="btn btn-primary col-sm-offset-1 col-sm-5" data-toggle="modal" data-target="#myModal">
-                    发起业务流程
+                    Launch Business Process
                 </button>
             </div>
 
@@ -169,31 +169,31 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
                             </button>
-                            <h4 class="modal-title" id="myModalLabel">发起业务流程</h4>
+                            <h4 class="modal-title" id="myModalLabel">Launch Business Process</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label>请选择要合作的企业</label>
+                                <label>Please select the user you want to cooperate with</label>
                                 <select class="form-control" id="selectReceiver">
 
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label>交易内容描述</label>
+                                <label>Transaction Description</label>
                                 <input class="form-control" id="bpDescription">
                             </div>
 
                             <div class="form-group">
-                                <label>JSON格式的Tx列表</label>
+                                <label>Tx List in JSON</label>
                                 <textarea id="txsJson" class="form-control" rows="5"></textarea>
                             </div>
 
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                            <button type="button" class="btn btn-primary" onclick="createBP()">提交</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+                            <button type="button" class="btn btn-primary" onclick="createBP()">submit</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal -->

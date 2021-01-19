@@ -43,9 +43,9 @@ public class ContractController {
         }
         try {
             businessService.creatCooperate(bpId, t, 0);
-            s = "发起合作成功";
+            s = "Launch cooperation successfully! ";
         } catch (Exception e) {
-            s = "发起合作失败";
+            s = "Launch cooperation failed";
             code = 1;
             e.printStackTrace();
         }
@@ -75,7 +75,7 @@ public class ContractController {
         if (transactionList != null) {
             response = new IResponse(0, transactionList);
         } else
-            response = new IResponse(0, "查询结果为空");
+            response = new IResponse(0, "result is empty");
         return response;
     }
 
@@ -88,7 +88,7 @@ public class ContractController {
         if (transactionList != null) {
             response = new IResponse(0, transactionList);
         } else
-            response = new IResponse(0, "查询结果为空");
+            response = new IResponse(0, "result is empty");
         return response;
     }
 
@@ -101,7 +101,7 @@ public class ContractController {
         if (transactionList != null) {
             response = new IResponse(0, transactionList);
         } else
-            response = new IResponse(0, "查询结果为空");
+            response = new IResponse(0, "result is empty");
         return response;
     }
 
@@ -131,7 +131,7 @@ public class ContractController {
         if (businessProcesses != null) {
             response = new IResponse(0, businessProcesses);
         } else
-            response = new IResponse(0, "查询结果为空");
+            response = new IResponse(0, "result is empty");
         return response;
     }
 
@@ -143,7 +143,7 @@ public class ContractController {
         if (businessProcessPres != null) {
             response = new IResponse(0, businessProcessPres);
         } else
-            response = new IResponse(0, "查询结果为空");
+            response = new IResponse(0, "result is empty");
         return response;
     }
 
@@ -154,9 +154,9 @@ public class ContractController {
         int code = 0;
         try {
             businessService.processTxInCooperation(userId, transId);
-            s = "交易确认成功";
+            s = "Transaction confirmed successfully";
         } catch (Exception e) {
-            s = "交易确认失败";
+            s = "Transaction confirmed failed";
             code = 1;
             e.printStackTrace();
         }
@@ -172,13 +172,13 @@ public class ContractController {
         try {
             String re = businessService.confirmBusinessProcessCompletion(userId, bpId);
             if (re.equals(""))
-                s = "分支完成确认成功";
+                s = "Process branch completion confirmed successfully!";
             else {
                 s = re;
                 code = 1;
             }
         } catch (Exception e) {
-            s = "分支完成确认失败";
+            s = "Process branch completion confirmed failed";
             code = 1;
             e.printStackTrace();
         }

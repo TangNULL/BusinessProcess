@@ -28,7 +28,7 @@ public class PcController {
             latestTransactionList = ConvertObjectUtil.convertTransactionToLatestTransaction(bp.getBpId(), transactionList);
             response = new IResponse(0, latestTransactionList);
         } else
-            response = new IResponse(1, "没有查询到结果");
+            response = new IResponse(1, "result is empty");
         return response;
     }
 
@@ -40,7 +40,7 @@ public class PcController {
         if (businessProcesses != null) {
             response = new IResponse(0, businessProcesses);
         } else
-            response = new IResponse(0, "没有查询到结果");
+            response = new IResponse(0, "result is empty");
         return response;
     }
 

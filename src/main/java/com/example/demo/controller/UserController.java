@@ -41,14 +41,14 @@ public class UserController {
             //设置本地节点隐私数据
             localCooperation.init(blockMapper.findAllInputTxs(), blockMapper.findAllOutputTxs());
         } else
-            response = new IResponse(1, "用户名或密码不正确");
+            response = new IResponse(1, "UserName or Password is wrong");
         return response;
     }
 
     @RequestMapping("/register")
     public IResponse register(@RequestParam String userName, @RequestParam String identity, @RequestParam String password) {
         IResponse response;
-        boolean b = userManageService.addUser(userName, password, identity, "description", "人工智能", "huge");
+        boolean b = userManageService.addUser(userName, password, identity, "description", "AI", "huge");
         if (b) {
             User u = userManageService.getUserByIdentity(identity);
             response = new IResponse(0, u);
@@ -59,7 +59,7 @@ public class UserController {
 //            webSocketService.broadcast(msg, localPublicBlockchain.getSockets());
 
         } else
-            response = new IResponse(1, "注册失败");
+            response = new IResponse(1, "Register failed");
         return response;
     }
 
@@ -71,7 +71,7 @@ public class UserController {
         if (userList != null) {
             response = new IResponse(0, userList);
         } else
-            response = new IResponse(0, "查询结果为空");
+            response = new IResponse(0, "result is empty");
         return response;
     }
 
@@ -83,7 +83,7 @@ public class UserController {
         if (userList != null) {
             response = new IResponse(0, userList);
         } else
-            response = new IResponse(0, "没有找到符合条件的用户");
+            response = new IResponse(0, "result is empty");
         return response;
     }
 
@@ -95,7 +95,7 @@ public class UserController {
         if (user != null) {
             response = new IResponse(0, user);
         } else
-            response = new IResponse(0, "用户不存在");
+            response = new IResponse(0, "User not exists");
         return response;
     }
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>我的联盟链</title>
+    <title>Consortium Chain</title>
 
 
     <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
@@ -20,7 +20,7 @@
     <!-- bootstrap-table.min.js -->
     <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
     <!-- 引入中文语言包 -->
-    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+    <!--<script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>-->
     <!-- SB Admin CSS - Include with every page -->
     <link href="css/publicChain.css" rel="stylesheet">
 
@@ -53,7 +53,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">交易系统</a>
+            <a class="navbar-brand" href="/">Trading System</a>
         </div>
         <!-- /.navbar-header -->
 
@@ -84,7 +84,7 @@
                 <ul class="nav" id="side-menu">
 
                     <li>
-                        <a id="publicChainBtn" href="/publicChain"><i class="fa fa-dashboard fa-fw"></i> 公有链</a>
+                        <a id="publicChainBtn" href="/publicChain"><i class="fa fa-dashboard fa-fw"></i> Public Chain</a>
                     </li>
                     <!--<li>
                         <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
@@ -99,7 +99,7 @@
                         &lt;!&ndash; /.nav-second-level &ndash;&gt;
                     </li>-->
                     <li>
-                        <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> 我的联盟链</a>
+                        <a id="consortiumChainBtn" href="/consortiumChain"><i class="fa fa-table fa-fw"></i> Consortium Chain</a>
                     </li>
                     <!--<li>
                         <a id="bpRecordBtn" href="/bpRecord"><i class="fa fa-edit fa-fw"></i> 我的流程记录</a>
@@ -193,32 +193,32 @@
                     <p>|</p>
                 </div>-->
                 <div class="col-lg-3" style="margin-top: 30px">
-                    <p>我正在进行的业务流程</p>
+                    <p>Ongoing Business Processes</p>
                     <p id="unclosedBPNum"></p>
                 </div>
                 <div class="col-lg-1" style="margin-top: 30px">
                     <p>|</p>
                 </div>
                 <div class="col-lg-3" style="margin-top: 30px">
-                    <p>已完成的业务流程</p>
+                    <p>Completed Business Processes</p>
                     <p id="closedBPNum"></p>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12" style="margin-top: 30px">
-                <div class="col-lg-3"><p>我的业务流程列表</p></div>
+                <div class="col-lg-3"><p>Business Process List</p></div>
 
                 <div class="col-lg-offset-3 col-lg-3 btn-group btn-group-toggle" data-toggle="buttons"
                      style="color: #2e6da4">
                     <label class="btn btn-secondary active" onclick="tableChange('all')">
-                        <input type="radio" name="options" id="option1" autocomplete="off" checked> 全部
+                        <input type="radio" name="options" id="option1" autocomplete="off" checked> all
                     </label>
                     <label class="btn btn-secondary" onclick="tableChange('unclosed')">
-                        <input type="radio" name="options" id="option2" autocomplete="off"> 进行中
+                        <input type="radio" name="options" id="option2" autocomplete="off"> ongoing
                     </label>
                     <label class="btn btn-secondary" onclick="tableChange('waiting')">
-                        <input type="radio" name="options" id="option3" autocomplete="off"> 待办
+                        <input type="radio" name="options" id="option3" autocomplete="off"> todo
                     </label>
                 </div>
             </div>
@@ -328,23 +328,23 @@
         sortable: true, // 是否启用排序
         columns: [{
             field: 'bpId',
-            title: '业务流程ID'
+            title: 'Business Process ID'
         },
             {
                 field: 'users',
-                title: '参与者'
+                title: 'Users'
             },
             {
                 field: 'createTime',
-                title: '开始时间'
+                title: 'CreateTime'
             },
             {
                 field: 'completeTime',
-                title: '结束时间'
+                title: 'CompleteTime'
             },
             {
                 field: 'ops',
-                title: '操作',
+                title: 'Operations',
                 width: 120,
                 align: 'center',
                 valign: 'middle',
@@ -359,9 +359,9 @@
         var bpId = row.bpId;
         var state = row.state  //waiting or other
         var result = "";
-        result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"findBPDetail('" + bpId + "', view='view')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+        result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"findBPDetail('" + bpId + "', view='view')\" title='check'><span class='glyphicon glyphicon-search'></span></a>";
         if (state == "waiting")
-            result += "<a href='javascript:;' class='btn btn-xs blue' onclick=\"processBP('" + bpId + "')\" title='处理'><span class='glyphicon glyphicon-pencil'></span></a>";
+            result += "<a href='javascript:;' class='btn btn-xs blue' onclick=\"processBP('" + bpId + "')\" title='handle'><span class='glyphicon glyphicon-pencil'></span></a>";
         return result;
     }
 
